@@ -32,7 +32,19 @@
                     <td>{{ plantilla.nombre }}</td>
                     <td>{{ plantilla.empresa_prestadora }}</td>
                     <td>{{ plantilla.archivo }}</td>
-                    <td> <a href="{{ url_for('editar_plantilla', id=plantilla.id) }}" class="btn-primary">Editar</a></td>
+                    <td> 
+                        <a href="{{ url_for('editar_plantilla', id=plantilla.id) }}" class="btn-primary">Editar</a>
+                        <form method="POST" action="{{ url_for('eliminar_plantilla', id=plantilla.id) }}" style="display:inline;" onsubmit="
+                            return confirm(
+                                '¿Eliminar plantilla?'
+                            );
+                        ">
+                            <button type="submit" class="btn-danger">
+                                Eliminar
+                            </button>
+
+                        </form>
+                    </td>
                 </tr>
 
                 {% endfor %}

@@ -602,5 +602,32 @@ def editar_plantilla(id):
     )
 
 
+@app.route(
+    '/plantillas/eliminar/<int:id>',
+    methods=['POST']
+)
+@login_required
+def eliminar_plantilla(id):
+
+    plantilla = PlantillaContrato.query.get_or_404(
+        id
+    )
+
+    db.session.delete(
+        plantilla
+    )
+
+    db.session.commit()
+
+    flash(
+        'Plantilla eliminada'
+    )
+
+    return redirect(
+        url_for(
+            'listar_plantillas'
+        )
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
