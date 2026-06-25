@@ -368,7 +368,8 @@ def generar_contrato_web():
                 "nss": t.nss,
                 "curp": t.curp.upper(),
                 "salario": t.salario_base,
-                "actividades": t.actividades.upper()
+                "actividades": t.actividades.upper(),
+                "puesto": t.puesto.upper()
 
             })
 

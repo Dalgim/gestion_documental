@@ -42,7 +42,8 @@ def generar_contrato(contexto):
     #ruta_plantilla = os.path.join('plantillas',plantilla.archivo)
 
     doc = DocxTemplate(
-        "documentos/plantillas/plantilla_cpse_BAIRES.docx"
+        #"documentos/plantillas/plantilla_cpse_BAIRES.docx"
+        "documentos/plantillas/plantilla_cpse_IDINEE.docx"
         #ruta_plantilla
     )
 
