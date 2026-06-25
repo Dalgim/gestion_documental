@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nuevo Proyecto</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
+    </head>
+    <body>
+        <br><br>
+        <div class="form-container">
+
+            <div class="form-title">
+
+                <h1>Nuevo Servicio Especializado</h1>
+                <p>  Registro de proyecto / servicio REPSE </p>
+
+            </div>
+
+            <div class="form-card">
+                <form method="POST">
+                    <div class="form-grid">
+
+                        <div class="section-title full-width">
+                            Datos del servicio
+                        </div>
+
+                        <!-- NOMBRE SERVICIO -->
+                        <div class="form-group">
+
+                            <label>Nombre Servicio</label>
+                            <input type="text" name="nombre_proyecto" required>
+
+                        </div>
+
+                        <!-- FOLIO REPSE -->
+                        <div class="form-group">
+
+                            <label>Folio REPSE</label>
+                            <input type="text" name="folio_repse" required>
+
+                        </div>
+
+                        <!-- ACTIVIDAD REPSE -->
+                        <div class="form-group">
+
+                            <label>Folio Actividad REPSE</label>
+                            <input type="text" name="act_repse">
+
+                        </div>
+
+                        <div class="section-title full-width">
+                            Datos de la empresa
+                        </div>
+
+                        <!-- EMPRESA -->
+                        <div class="form-group">
+
+                            <label>Nombre Empresa prestadora del servicio</label>
+                            <input type="text" name="nom_empresa" required>
+
+                        </div>
+
+                        <!-- TIPO SERVICIO -->
+                        <div class="form-group">
+
+                            <label>Tipo Servicio</label>
+
+                            <select name="tipo_servicio">
+
+                                <option value="REPSE">
+                                    REPSE
+                                </option>
+
+                                <option value="CONSULTORIA">
+                                    CONSULTORIA
+                                </option>
+
+                                <option value="MATERIALIDAD">
+                                    MATERIALIDAD
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('proyectos') }}" class="btn-secondary">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-primary">
+                            Guardar Servicio
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </body>
+</html>

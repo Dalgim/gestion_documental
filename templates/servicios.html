@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">
+
+    Servicios
+
+</h1>
+
+<div class="card">
+
+    <a
+        href="{{ url_for('nuevo_proyecto') }}"
+        class="btn"
+    >
+        Nuevo Servicio
+
+    </a>
+
+    <br><br>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Folio REPSE</th>
+                <th>Folio Actividad REPSE</th>
+                <th>Empresa servicio</th>
+                <th>Tipo Servicio</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for proyecto in proyectos %}
+                <tr>
+                    <td>{{ proyecto.id }}</td>
+                    <td>{{ proyecto.nombre_proyecto }}</td>
+                    <td>{{ proyecto.folio_repse }}</td>
+                    <td>{{ proyecto.act_repse }}</td>
+                    <td>{{ proyecto.nom_empresa }}</td>
+                    <td>{{ proyecto.tipo_servicio }}</td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

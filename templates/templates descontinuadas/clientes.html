@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Listado Clientes</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+
+        <a href="/">🏠 Inicio</a>
+
+        <br><br>
+        <h2>Clientes</h2>
+
+        <a href="/clientes/nuevo">
+            Nuevo Cliente
+        </a>
+
+        <hr>
+
+        <table border="1">
+
+        <tr>
+            <th>Nombre</th>
+            <th>RFC</th>
+            <th>Representante</th>
+            <th>Domicilio Fiscal</th>
+            <th>Correo</th>
+            <th>Nomenclatura</th>
+        </tr>
+
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.nombre_cliente }}</td>
+            <td>{{ cliente.rfc }}</td>
+            <td>{{ cliente.representante }}</td>
+            <td>{{ cliente.dom_fiscal }}</td>
+            <td>{{ cliente.correo }}</td>
+            <td>{{ cliente.nomenclatura }}</td>
+        </tr>
+        {% endfor %}
+
+        </table>
+
+    </body>
+</html>

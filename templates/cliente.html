@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">
+
+    Clientes
+
+</h1>
+
+<div class="card">
+
+    <a
+        href="{{ url_for('nuevo_cliente') }}"
+        class="btn"
+    >
+        Nuevo Cliente
+
+    </a>
+
+    <br><br>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>RFC</th>
+                <th>Representante</th>
+                <th>Domicilio Fiscal</th>
+                <th>Correo</th>
+                <th>Nomenclatura</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nombre_cliente }}</td>
+                    <td>{{ cliente.rfc }}</td>
+                    <td>{{ cliente.representante }}</td>
+                    <td>{{ cliente.dom_fiscal }}</td>
+                    <td>{{ cliente.correo }}</td>
+                    <td>{{ cliente.nomenclatura }}</td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

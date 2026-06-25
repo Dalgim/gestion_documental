@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Contratos Generados</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+
+        <a href="/">🏠 Inicio</a>
+
+        <br><br>
+        <h2>Contratos</h2>
+
+        <a href="/contratos/nuevo">
+            Nuevo contrato
+        </a>
+
+        <hr>
+
+        <table border="1">
+
+        <tr>
+            <th>Cliente</th>
+            <th>Empresa Servicio</th>
+            <th>Fecha de contrato</th>
+            <th>Ubicación del Contrato</th>
+        </tr>
+
+        {% for contrato in contratos %}
+        <tr>
+            <td>{{ contrato.nom_cliente }}</td>
+            <td>{{ contrato.nom_empresa }}</td>
+            <td>{{ contrato.fecha_generacion }}</td>
+            <td>{{ contrato.archivo_generado }}</td>
+        </tr>
+        {% endfor %}
+
+        </table>
+
+    </body>
+</html>

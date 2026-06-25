@@ -1,0 +1,45 @@
+<html>
+    <head>  
+        <title> Contratos </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+
+        <a href="/">🏠 Inicio</a>
+        <br><br>
+
+        <h2>Plantillas Guardadas</h2>
+
+        <a href="{{ url_for('nueva_plantilla') }}">
+            Nueva plantilla
+        </a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Empresa</th>
+                    <th>Archivo</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for plantilla in plantillas %}
+
+                <tr>
+                    <td>{{ plantilla.nombre }}</td>
+                    <td>{{ plantilla.empresa_prestadora }}</td>
+                    <td>{{ plantilla.archivo }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </body>
+
+
+</html>

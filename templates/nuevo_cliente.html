@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nuevo Cliente</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
+    </head>
+    <body>
+
+
+        <div class="form-container">
+
+            <div class="form-title">
+
+                <h1>Nuevo Cliente</h1>
+                <p>Registro de clientes para generación de contratos.</p>
+
+            </div>
+
+            <div class="form-card">
+
+                <form method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="section-title full-width">
+
+                            Información General
+
+                        </div>
+
+                        <!-- NOMBRE -->
+
+                        <div class="form-group">
+
+                            <label>Nombre del Cliente</label>
+
+                            <input
+                                type="text"
+                                name="nombre_cliente"
+                                class="mayusculas"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- RFC -->
+
+                        <div class="form-group">
+
+                            <label>RFC</label>
+                            <input type="text" name="rfc" class="mayusculas" maxlength="13" required>
+
+                        </div>
+
+                        <!-- REPRESENTANTE -->
+
+                        <div class="form-group full-width">
+
+                            <label>Representante Legal</label>
+                            <input type="text" name="representante" class="mayusculas" required>
+
+                        </div>
+
+                        <!-- DOMICILIO -->
+
+                        <div class="form-group full-width">
+
+                            <label>Domicilio Fiscal</label>
+                            <textarea name="dom_fiscal" class="mayusculas" rows="2"  required></textarea>
+
+                        </div>
+
+                        <!-- CORREO -->
+
+                        <div class="form-group">
+
+                            <label>Correo Electrónico</label>
+                            <input type="email" name="correo" required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('clientes') }}" class="btn-secondary">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-primary">
+                            Guardar Cliente
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <script>
+
+        document
+        .querySelectorAll(
+            '.mayusculas'
+        )
+        .forEach(campo => {
+
+            campo.addEventListener(
+                'input',
+                function(){
+
+                    this.value =
+                        this.value.toUpperCase();
+
+                }
+            );
+
+        });
+
+        </script>
+
+    </body>
+</html>

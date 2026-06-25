@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Proyectos</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+
+        <a href="/">🏠 Inicio</a>
+        
+        <br><br>        
+        <h2>Listado de Trabajadores</h2>
+
+        <a href="/trabajadores/nuevo">
+            Nuevo Trabajador
+        </a>
+
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>CURP</th>
+                <th>RFC</th>
+                <th>NSS</th>
+                <th>Salario Base</th>
+                <th>Puesto</th>
+                <th>Actividades que realiza</th>
+                <th>Sevicio asociado</th>
+
+            </tr>
+
+            {% for trabajador in trabajadores %}
+
+            <tr>
+                <td>{{ trabajador.id }}</td>
+                <td>{{ trabajador.nombre_trabajador }}</td>
+                <td>{{ trabajador.curp }}</td>
+                <td>{{ trabajador.rfc }}</td>
+                <td>{{ trabajador.nss }}</td>
+                <td>{{ trabajador.salario_base }}</td>
+                <td>{{ trabajador.puesto }}</td>
+                <td>{{ trabajador.actividades }}</td>
+                <td>{{ trabajador.proyecto_id }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </body>
+</html>

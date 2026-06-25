@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">
+
+    Contratos
+
+</h1>
+
+<div class="card">
+
+    <a
+        href="{{ url_for('nuevo_contrato') }}"
+        class="btn"
+    >
+        Nuevo Contrato
+    </a>
+
+    <br><br>
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Empresa Servicio</th>
+                <th>Fecha de contrato</th>
+                <th>Ubicación del Contrato</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for contrato in contratos %}
+            <tr>
+                <td>{{ contrato.nom_cliente }}</td>
+                <td>{{ contrato.nom_empresa }}</td>
+                <td>{{ contrato.fecha_generacion }}</td>
+                <td>{{ contrato.archivo_generado }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

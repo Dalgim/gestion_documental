@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <title>Nuevo Trabajador</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
+    </head>
+    <body>
+        <br><br>
+        <div class="form-container">
+
+            <div class="form-title">
+
+                <h1>Nuevo Trabajador</h1>
+                <p>Capture la información del trabajador.</p>
+
+            </div>
+
+            <div class="form-card">
+
+                <form method="POST">
+
+                    <div class="form-grid">
+
+                        <!-- DATOS PERSONALES -->
+
+                        <div class="section-title full-width">
+                            Datos Personales
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Nombre Completo</label>
+                            <input type="text" name="nombre_trabajador" required style="text-transform: uppercase;">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>CURP</label>
+                            <input type="text" name="curp"  maxlength="18" required style="text-transform: uppercase;">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>RFC</label>
+                            <input type="text" name="rfc" maxlength="13" style="text-transform: uppercase;">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>NSS</label>
+                            <input type="text" name="nss" maxlength="11" required>
+
+                        </div>
+
+                        <!-- DATOS LABORALES -->
+
+                        <div class="section-title full-width">
+
+                            Información Laboral
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Proyecto</label>
+
+                            <select name="proyecto_id" required>
+
+                                <option value="">
+                                    Seleccione...
+                                </option>
+
+                                {% for proyecto in proyectos %}
+
+                                <option value="{{ proyecto.id }}">
+
+                                    {{ proyecto.nombre_proyecto }}
+
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Puesto</label>
+                            <input  type="text" name="puesto" required style="text-transform: uppercase;">
+
+                        </div>
+                        
+
+                        <div class="form-group">
+
+                            <label>Salario Base</label>
+                            <input  type="text" name="salario_base" required>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Actividades</label>
+                            <input type="text" name="actividades" required style="text-transform: uppercase;">
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('trabajadores') }}" class="btn-secondary">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-primary">
+                            Guardar Trabajador
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>Login</title>
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+
+    </head>
+
+    <body>
+
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-logo">
+
+                    <h1>Sistema </h1>
+                    <p>de Administración documental</p>
+                </div>
+
+                <div class="login-title">
+                    <h2>Iniciar Sesión</h2>
+                </div>
+
+                {% with messages =
+                    get_flashed_messages()
+                %}
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                        <div class="alert alert-error">
+
+                            {{ message }}
+
+                        </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endwith %}
+
+                <form method="POST">
+
+                    <div class="form-group">
+
+                        <label>Usuario</label>
+                        <input type="text" name="user" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Contraseña</label>
+                        <input type="password" name="contraseña" required>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn-login"
+                    >
+
+                        Ingresar
+
+                    </button>
+
+                </form>
+
+                <div class="login-footer">
+
+                    © {{ current_year }} NUBIKA
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

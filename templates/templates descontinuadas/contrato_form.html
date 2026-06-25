@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+    <title>Generar Contrato</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+
+    <body>
+
+        <h2>Generación de Contrato</h2>
+
+        <form method="POST">
+
+            <h3>Cliente</h3>
+            <input
+                type="text"
+                value="{{ cliente.nombre_cliente }}"
+                readonly
+            >
+
+            <br><br>
+            <h3>Proyecto</h3>
+            <input
+                type="text"
+                value="{{ proyecto.nombre_proyecto }}"
+                readonly
+            >
+
+            <br><br>
+            <label>Objeto del Contrato</label>
+            <textarea
+                name="objeto"
+                rows="5"
+                cols="60"
+                required
+            ></textarea>
+
+            <br><br>
+            <h3>Fecha inicio</h3>
+            <input
+                type="text"
+                value="{{proyecto.fecha_inicio}}"
+                readonly
+            >
+
+            <br><br>
+            <h3>Fecha Fin</h3>
+            <input
+                type="text"
+                value="{{proyecto.fecha_fin}}"
+                readonly
+            >
+
+            <br><br>
+            <label>Forma de Pago</label>
+            <textarea
+                name="forma_pago"
+                rows="3"
+                cols="60"
+                required
+            ></textarea>
+
+            <br><br>
+            <label>Lugar de Firma</label>
+            <input
+                type="text"
+                name="lugar_firma"
+                placeholder="Puebla, Puebla"
+                required
+            >
+
+            <br><br>
+            <button type="submit">
+                Generar Contrato
+            </button>
+
+            &nbsp;&nbsp;&nbsp;
+            <a href="/proyectos">Volver</a>
+
+        </form>
+
+    </body>
+
+</html>

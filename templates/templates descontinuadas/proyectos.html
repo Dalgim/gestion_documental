@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Proyectos</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+
+        <a href="/">🏠 Inicio</a>
+        
+        <br><br>        
+        <h2>Listado de Servicios</h2>
+
+        <a href="/proyectos/nuevo">
+            Nuevo Servicio
+        </a>
+
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Folio REPSE</th>
+                <th>Folio Actividad REPSE</th>
+                <th>Empresa servicio</th>
+                <th>Tipo Servicio</th>
+
+            </tr>
+
+            {% for proyecto in proyectos %}
+
+            <tr>
+                <td>{{ proyecto.id }}</td>
+                <td>{{ proyecto.nombre_proyecto }}</td>
+                <td>{{ proyecto.folio_repse }}</td>
+                <td>{{ proyecto.act_repse }}</td>
+                <td>{{ proyecto.nom_empresa }}</td>
+                <td>{{ proyecto.tipo_servicio }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </body>
+</html>

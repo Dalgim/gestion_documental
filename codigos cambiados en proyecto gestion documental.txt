@@ -1,0 +1,351 @@
+códigos que pueden servir mas adelante
+
+1. extraído de generador_documentos.py
+'''
+def generar_contrato(datos):
+   
+    doc = DocxTemplate('documentos/plantillas/contrato_plantilla.docx')
+
+    doc.render(datos)
+
+    ruta = (
+        f'documentos/contratos/'
+        f'Contrato_{datos['CLIENTE']}.docx'
+    )
+
+    doc.save(ruta)
+
+    return ruta
+    '''
+
+'''
+def generar_contrato(cliente, proyecto, tipo_contrato):
+
+    plantillas = {
+
+        "REPSE":
+            "contrato_plantilla.docx",
+
+        "CONSULTORIA":
+            "contrato_consultoria.docx",
+
+        "MODIFICATORIO":
+            "convenio_modificatorio.docx",
+
+        "TERMINACION":
+            "carta_terminacion.docx"
+    }
+
+    plantilla = (
+        "documentos/plantillas/"
+        + plantillas[tipo_contrato]
+    )
+
+    doc = DocxTemplate(
+        plantilla
+    )
+
+    ruta = (
+        f'documentos/contratos/'
+        f'Contrato_{cliente.nombre_cliente}.docx'
+    )
+
+    doc.save(ruta)
+
+    return ruta
+'''
+
+
+2. extraído de app.py
+
+'''
+# Ruta para la generacion de los contratos
+@app.route('/proyecto/<int:id>/contrato', methods=['GET', 'POST'])
+def contrato(id):
+
+    proyecto = Proyecto.query.get_or_404(id)
+
+    cliente = Cliente.query.get_or_404(
+        proyecto.cliente_id
+    )
+
+    if request.method == 'POST':
+
+        datos_contrato = {
+            "CLIENTE": cliente.nombre_cliente,
+            "RFC": cliente.rfc,
+            "REPRESENTANTE": cliente.representante,
+            "PROYECTO": proyecto.nombre_proyecto,
+            "TIPO_SERVICIO": proyecto.tipo_servicio,
+            "MONTO": proyecto.monto,
+            "INICIO": proyecto.fecha_inicio.strftime("%d/%m/%Y") if proyecto.fecha_inicio else "",
+            "FIN": proyecto.fecha_fin.strftime("%d/%m/%Y") if proyecto.fecha_fin else "",
+            "OBJETO": request.form['objeto'],
+            "VIGENCIA": request.form['vigencia'],
+            "FORMA_PAGO": request.form['forma_pago'],
+            "LUGAR_FIRMA": request.form['lugar_firma']
+        }
+
+        archivo = generar_contrato(datos_contrato)
+
+        return send_file(
+            archivo, as_attachment = True
+        )
+    
+    return render_template(
+        'contrato_form.html',
+        cliente=cliente,
+        proyecto=proyecto
+    )
+
+    #ruta = generar_contrato(cliente, proyecto)
+    #return f"{proyecto}"
+    #return f"Contrato generado en: {ruta}"
+
+
+@app.route('/contratos')
+def contratos():
+
+    clientes = Cliente.query.all()
+    proyectos = Proyecto.query.all()
+
+    return render_template(
+        'contratos.html',
+        clientes=clientes,
+        proyectos=proyectos
+    )
+'''
+
+
+
+@app.route(
+    '/proyecto/contrato',
+    methods=['GET', 'POST']
+)
+def contrato():
+
+    proyecto = Proyecto.query.get_or_404(id)
+
+    cliente = Cliente.query.get_or_404(
+        proyecto.cliente_id
+    )
+
+    meses = (
+        (proyecto.fecha_fin.year - proyecto.fecha_inicio.year) * 12
+        + (proyecto.fecha_fin.month - proyecto.fecha_inicio.month)
+    )
+
+    if proyecto.fecha_fin.day >= proyecto.fecha_inicio.day:
+        meses += 1
+
+    if request.method == 'POST':
+
+        contexto = {
+
+            "CLIENTE": cliente.nombre_cliente,
+            "RFC": cliente.rfc,
+            "REPRESENTANTE": cliente.representante,
+
+            "PROYECTO": proyecto.nombre_proyecto,
+            "TIPO_SERVICIO": proyecto.tipo_servicio,
+            "MONTO": proyecto.monto,
+
+            "INICIO":
+                proyecto.fecha_inicio.strftime("%d/%m/%Y")
+                if proyecto.fecha_inicio else "",
+
+            "FIN":
+                proyecto.fecha_fin.strftime("%d/%m/%Y")
+                if proyecto.fecha_fin else "",
+
+            "OBJETO":
+                request.form['objeto'],
+
+            "FORMA_PAGO":
+                request.form['forma_pago'],
+
+            "VIGENCIA":
+                f"{meses} Meses",
+
+            "LUGAR_FIRMA": request.form['lugar_firma']
+        }
+
+        archivo = generar_contrato(contexto)
+
+        return send_file(
+            archivo,
+            as_attachment=True
+        )
+
+    return render_template(
+        'contrato_form.html',
+        proyecto=proyecto,
+        cliente=cliente
+    )
+
+
+3. código retirado de app.py
+
+            '''
+            "NOMEMPLEADO":trabajador.nombre_trabajador,
+
+            "NSS": trabajador.nss,
+
+            "CURP": trabajador.curp,
+
+            "SALARIO": trabajador.salario_base,
+
+            "ACTIVIDAD": trabajador.actividades
+            '''
+
+
+4. en nuevo_contrato.html 
+
+
+            <!--
+
+            <label>Proyecto</label>
+            <select name="proyecto_id">
+
+                {% for proyecto in proyectos %}
+
+                <option value="{{ proyecto.id }}">
+                    {{ proyecto.nombre_proyecto }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <br><br>
+            <label>Tipo de Contrato</label>
+            <select name="tipo_contrato">
+
+                <option value="REPSE">
+                    Servicios Especializados REPSE
+                </option>
+
+                <option value="CONSULTORIA">
+                    Consultoría
+                </option>
+
+                <option value="MODIFICATORIO">
+                    Convenio Modificatorio
+                </option>
+
+                <option value="TERMINACION">
+                    Carta de Terminación
+                </option>
+
+            </select>
+
+            <br><br>
+            <button type="submit">
+                Generar Documento
+            </button>
+
+
+
+                <h3>Cliente</h3>
+                {% for cliente in clientes %}
+                <input
+                    type="text"
+                    value="{{ cliente.nombre_cliente }}"
+                    readonly
+                >
+                {% endfor %}
+
+                <br><br>
+                <h3>Proyecto</h3>
+                {% for proyecto in proyectos %}
+                <input
+                    type="text"
+                    value="{{ proyecto.nombre_proyecto }}"
+                    readonly
+                >
+                {% endfor %}
+
+                <br><br>
+                <label>Objeto del Contrato</label>
+                <textarea
+                    name="objeto"
+                    rows="5"
+                    cols="60"
+                    required
+                ></textarea>
+
+                <br><br>
+                <label>Vigencia</label>
+                <input
+                    type="text"
+                    name="vigencia"
+                    placeholder="12 meses"
+                    required
+                >
+
+                <br><br>
+                {% for proyecto in proyectos %}
+                <h3>Fecha inicio</h3>
+                <input
+                    type="text"
+                    value="{{proyecto.fecha_inicio}}"
+                    readonly
+                >
+
+                <br><br>
+                <h3>Fecha Fin</h3>
+                <input
+                    type="text"
+                    value="{{proyecto.fecha_fin}}"
+                    readonly
+                >
+                {% endfor %}
+
+                <br><br>
+                <label>Forma de Pago</label>
+                <textarea
+                    name="forma_pago"
+                    rows="3"
+                    cols="60"
+                    required
+                ></textarea>
+
+                <br><br>
+                <label>Lugar de Firma</label>
+                <input
+                    type="text"
+                    name="lugar_firma"
+                    placeholder="Puebla, Puebla"
+                    required
+                >
+
+                <br><br>
+                <button type="submit">
+                    Generar Contrato
+                </button>
+            
+            -->
+
+
+
+
+
+  <!--
+
+            <select name="trabajadores" multiple size="10">
+
+                {% for trabajador in trabajadores %}
+
+                <option value="{{ trabajador.id }}">
+
+                    {{ trabajador.nombre_trabajador }}
+
+                </option>
+
+                {% endfor %}
+
+                </select>
+
+</select>
+
+            -->

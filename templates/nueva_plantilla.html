@@ -1,0 +1,45 @@
+<html>
+    <head>  
+        <title> Contratos </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <h2>Guarda nueva plantilla de contrato</h2>
+
+        <form method="POST">
+
+            <label>Nombre Plantilla</label>
+            <input
+                type="text"
+                name="nombre"
+                required
+            >
+
+            <label>Empresa Prestadora</label>
+            <input
+                type="text"
+                name="empresa_prestadora"
+                required
+            >
+
+            <label>Archivo Word</label>
+            <input
+                type="text"
+                name="archivo"
+                required
+            >
+
+            <label>Descripción</label>
+            <textarea
+                name="descripcion"
+            ></textarea>
+
+            <button type="submit">
+
+                Guardar
+
+            </button>
+
+        </form>
+    </body>
+</html>
