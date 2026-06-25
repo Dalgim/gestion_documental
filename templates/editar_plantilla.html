@@ -1,0 +1,104 @@
+<html>
+    <head>  
+        <title> Contratos </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
+    </head>
+    <body>
+        <div class="form-container">
+
+            <div class="form-title">
+
+                <h1>Editar Plantilla</h1>
+
+            </div>
+
+            <div class="form-card">
+
+                <form method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label>Nombre</label>
+
+                            <input
+                                type="text"
+                                name="nombre"
+                                value="{{ plantilla.nombre }}"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Empresa</label>
+
+                            <input
+                                type="text"
+                                name="empresa_prestadora"
+                                value="{{ plantilla.empresa_prestadora }}"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Archivo</label>
+
+                            <input
+                                type="text"
+                                name="archivo"
+                                value="{{ plantilla.archivo }}"
+                                required
+                            >
+
+                        </div>
+
+                        <div
+                            class="form-group full-width"
+                        >
+
+                            <label>Descripción</label>
+
+                            <textarea
+                                name="descripcion"
+                            >{{ plantilla.descripcion }}</textarea>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a
+                            href="{{ url_for('listar_plantillas') }}"
+                            class="btn-secondary"
+                        >
+
+                            Cancelar
+
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+
+                            Guardar Cambios
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    
+    </body>
+
+</html>
