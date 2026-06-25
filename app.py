@@ -466,6 +466,7 @@ def obtener_trabajadores(proyecto_id):
         for t in trabajadores
     ])
 
+
 # Ruta para obtener las plantillas de contrato por empresa
 @app.route('/api/plantillas')
 @login_required
@@ -551,6 +552,53 @@ def nueva_plantilla():
 
     return render_template(
         '/nueva_plantilla.html'
+    )
+
+# Ruta para editar los registros de la tabla donde van las plantillas de contratos
+@app.route(
+    '/plantillas/editar/<int:id>',
+    methods=['GET', 'POST']
+)
+@login_required
+def editar_plantilla(id):
+
+    plantilla = PlantillaContrato.query.get_or_404(
+        id
+    )
+
+    if request.method == 'POST':
+
+        plantilla.nombre = request.form[
+            'nombre'
+        ].upper()
+
+        plantilla.empresa_prestadora = request.form[
+            'empresa_prestadora'
+        ].upper()
+
+        plantilla.archivo = request.form[
+            'archivo'
+        ]
+
+        plantilla.descripcion = request.form.get(
+            'descripcion'
+        )
+
+        db.session.commit()
+
+        flash(
+            'Plantilla actualizada'
+        )
+
+        return redirect(
+            url_for(
+                'listar_plantillas'
+            )
+        )
+
+    return render_template(
+        'editar_plantilla.html',
+        plantilla=plantilla
     )
 
 

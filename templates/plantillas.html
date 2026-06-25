@@ -20,6 +20,7 @@
                     <th>Nombre</th>
                     <th>Empresa</th>
                     <th>Archivo</th>
+                    <th>EDITAR ARCHIVO</th>
                 </tr>
             </thead>
 
@@ -31,6 +32,7 @@
                     <td>{{ plantilla.nombre }}</td>
                     <td>{{ plantilla.empresa_prestadora }}</td>
                     <td>{{ plantilla.archivo }}</td>
+                    <td> <a href="{{ url_for('editar_plantilla', id=plantilla.id) }}" class="btn-primary">Editar</a></td>
                 </tr>
 
                 {% endfor %}
