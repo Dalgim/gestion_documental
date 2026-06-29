@@ -149,7 +149,25 @@ class Trabajador(db.Model):
         ),
         nullable=False
     )
+    
 
+contrato_trabajador = db.Table(
+    "fact_cont_trab",
+
+    db.Column(
+        "contrato_id",
+        db.Integer,
+        db.ForeignKey("fact_contratos.id"),
+        primary_key=True
+    ),
+
+    db.Column(
+        "trabajador_id",
+        db.Integer,
+        db.ForeignKey("dim_trabajadores.id"),
+        primary_key=True
+    )
+)
 
 # Tabla donde se guardara los contratos
 class Contrato(db.Model):
@@ -211,6 +229,21 @@ class Contrato(db.Model):
     fecha_generacion = db.Column(
         db.DateTime,
         default=datetime.utcnow
+    )
+
+    lugar_firma = db.Column(
+        db.String(500)
+    )
+
+    trabajadores = db.relationship(
+        'Trabajador',
+        secondary=contrato_trabajador,
+        lazy='subquery',
+        backref=db.backref(
+            'contratos',
+            lazy=True
+        )
+
     )
 
     #contexto_json = db.Column(

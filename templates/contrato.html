@@ -25,6 +25,9 @@
                 <th>Empresa Servicio</th>
                 <th>Fecha de contrato</th>
                 <th>Ubicación del Contrato</th>
+                <th style="width:220px; text-align:center;">
+                    Acciones
+                </th>
             </tr>
         </thead>
 
@@ -35,6 +38,23 @@
                 <td>{{ contrato.nom_empresa }}</td>
                 <td>{{ contrato.fecha_generacion }}</td>
                 <td>{{ contrato.archivo_generado }}</td>
+                <td style="text-align:center;white-space:nowrap;">
+                    <a  href="{{ url_for('editar_contrato', id=contrato.id) }}" class="btn-primary">
+                        Editar
+                    </a>
+
+                    <form method="POST" action="{{ url_for('eliminar_contrato', id=contrato.id) }}" style="display:inline-block;"
+                        onsubmit="
+                            return confirm(
+                                '¿Desea eliminar el contrato?'
+                            );
+                        "
+                    >
+                        <button type="submit" class="btn-danger">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

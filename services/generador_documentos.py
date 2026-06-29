@@ -85,3 +85,22 @@ def actualizar_contrato(
     )
 
     return ruta
+
+# Funcion para regenerar el contrato una vez que se modifique algun dato
+def regenerar_contrato(contexto):
+    """
+    Genera nuevamente el contrato y devuelve:
+
+    archivo -> para descargar
+    ruta -> para guardar en la BD
+    """
+
+    archivo = generar_contrato(
+        contexto
+    )
+
+    ruta = actualizar_contrato(
+        contexto
+    )
+
+    return archivo, ruta

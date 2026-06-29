@@ -2,7 +2,7 @@
 # importamos las librerias necesarias para el proyecto
 from flask import Flask, render_template, request, redirect, send_file, jsonify, flash, url_for, session
 from flask_login import login_manager, login_user, logout_user, login_required, current_user, LoginManager
-from services.generador_documentos import generar_contrato, actualizar_contrato, fecha_letra
+from services.generador_documentos import generar_contrato, actualizar_contrato, fecha_letra, regenerar_contrato
 from models.models import db, Cliente, Proyecto, Contrato, Trabajador, Users, PlantillaContrato, Empresa
 from werkzeug.security import check_password_hash
 from flask_migrate import Migrate
@@ -435,8 +435,14 @@ def generar_contrato_web():
                 request.form['fecha_fin'],
                 '%Y-%m-%d'
             ).date(),
-            vigencia = f"{meses} Meses"
+            vigencia = f"{meses} Meses",
+            lugar_firma = request.form['lugar_firma']
         )
+
+        for trabajador in trabajadores_db:
+            nuevo_contrato.trabajadores.append(
+                trabajador
+            )
 
         db.session.add(nuevo_contrato)
         db.session.commit()
@@ -935,7 +941,6 @@ def editar_servicio(id):
 # ==========================================
 # Eliminar Servicio
 # ==========================================
-
 @app.route(
     '/proyectos/eliminar/<int:id>',
     methods=['POST']
@@ -1053,6 +1058,199 @@ def eliminar_empresa(id):
         url_for('empresas')
     )
 
+
+
+# ==========================================
+# Editar contrato
+# ==========================================
+@app.route(
+    '/contratos/editar/<int:id>',
+    methods=['GET', 'POST']
+)
+@login_required
+def editar_contrato(id):
+
+    contrato = Contrato.query.get_or_404(id)
+
+    proyecto = Proyecto.query.get_or_404(
+        contrato.proyecto_id
+    )
+
+    clientes = Cliente.query.order_by(
+        Cliente.nombre_cliente
+    ).all()
+
+    proyectos = Proyecto.query.order_by(
+        Proyecto.nombre_proyecto
+    ).all()
+
+    trabajadores = Trabajador.query.filter_by(
+        empresa_id=proyecto.empresa_id
+        ).order_by(
+        Trabajador.nombre_trabajador
+    ).all()
+
+    if request.method == 'POST':
+
+        contrato.cliente_id = request.form['cliente_id']
+
+        contrato.proyecto_id = request.form['proyecto_id']
+
+        contrato.monto = request.form['monto']
+
+        contrato.forma_pago = request.form['forma_pago']
+
+        contrato.fecha_inicio = datetime.strptime(
+            request.form['fecha_inicio'],
+            '%Y-%m-%d'
+        ).date()
+
+        contrato.fecha_fin = datetime.strptime(
+            request.form['fecha_fin'],
+            '%Y-%m-%d'
+        ).date()
+
+        cliente = Cliente.query.get(
+            contrato.cliente_id
+        )
+
+        contrato.nom_cliente = cliente.nombre_cliente
+
+        contrato.nom_empresa = proyecto.empresa.nombre
+
+        meses = (
+            (contrato.fecha_fin.year - contrato.fecha_inicio.year) * 12
+            + (contrato.fecha_fin.month - contrato.fecha_inicio.month)
+        )
+
+        if contrato.fecha_fin.day >= contrato.fecha_inicio.day:
+            meses += 1
+
+        contrato.vigencia = f"{meses} Meses"
+
+        contrato.trabajadores.clear()
+
+        ids = request.form.getlist(
+            "trabajadores"
+        )
+
+        trabajadores_db = Trabajador.query.filter(
+            Trabajador.id.in_(ids)
+        ).all()
+
+        for trabajador in trabajadores_db:
+
+            contrato.trabajadores.append(
+                trabajador
+            )
+
+        db.session.commit()
+
+        cliente = Cliente.query.get_or_404(
+            contrato.cliente_id
+        )
+
+        proyecto = Proyecto.query.get_or_404(
+            contrato.proyecto_id
+        )
+
+        trabajadores = []
+
+        for t in contrato.trabajadores:
+
+            trabajadores.append({
+                "nombre": t.nombre_trabajador.upper(),
+                "nss": t.nss,
+                "curp": t.curp.upper(),
+                "salario": t.salario_base,
+                "actividades": t.actividades.upper(),
+                "puesto": t.puesto.upper()
+            })
+        
+        contexto = {
+
+            "NOMENCLATURA": cliente.nomenclatura.upper(),
+            "CLIENTE": cliente.nombre_cliente.upper(),
+            "RFC": cliente.rfc.upper(),
+            "DOM_FISCAL": cliente.dom_fiscal.upper(),
+            "REPRESENTANTE": cliente.representante.upper(),
+            "PROYECTO": proyecto.nombre_proyecto.upper(),
+            "TIPO_SERVICIO": proyecto.tipo_servicio.upper(),
+            "EMPRESA_SERVICIO": proyecto.empresa.nombre.upper(),
+            "MONTO": contrato.monto,
+            "VIGENCIA": contrato.vigencia.upper(),
+            "INICIO": fecha_letra(
+                contrato.fecha_inicio
+            ),
+            "FIN": fecha_letra(
+                contrato.fecha_fin
+            ),
+            "FORMA_PAGO": contrato.forma_pago,
+            "LUGAR_FIRMA": contrato.lugar_firma.upper(),
+            "trabajadores": trabajadores
+        }
+
+        archivo, ruta = regenerar_contrato(
+            contexto
+        )
+
+        contrato.archivo_generado = ruta
+        db.session.commit()
+
+        flash(
+            'Contrato actualizado correctamente.',
+            'success'
+        )
+
+        return send_file(
+            archivo,
+            as_attachment=True
+        )
+
+    return render_template(
+        'editar_contrato.html',
+        contrato=contrato,
+        clientes=clientes,
+        proyectos=proyectos,
+        trabajadores=trabajadores
+    )
+
+
+# ==========================================
+# Eliminar contrato
+# ==========================================
+@app.route(
+    '/contratos/eliminar/<int:id>',
+    methods=['POST']
+)
+@login_required
+def eliminar_contrato(id):
+
+    contrato = Contrato.query.get_or_404(id)
+
+    try:
+
+        db.session.delete(contrato)
+
+        db.session.commit()
+
+        flash(
+            'Contrato eliminado correctamente.',
+            'success'
+        )
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        flash(
+            f'Error al eliminar contrato: {e}',
+            'danger'
+        )
+
+    return redirect(
+        url_for('contratos')
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
