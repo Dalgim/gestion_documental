@@ -1,58 +1,87 @@
-<html>
-    <head>  
-        <title> Contratos </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    </head>
-    <body>
+{% extends 'base.html' %}
 
-        <a href="/">🏠 Inicio</a>
-        <br><br>
+{% block content %}
 
-        <h2>Plantillas Guardadas</h2>
+        <div class="page-title">
 
-        <a href="{{ url_for('nueva_plantilla') }}">
-            Nueva plantilla
-        </a>
+            <h1>Plantillas de Contrato</h1>
+            <p> Administración de las plantillas utilizadas para la generación de contratos.</p>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Empresa</th>
-                    <th>Archivo</th>
-                    <th>EDITAR/ELIMINAR ARCHIVO</th>
-                </tr>
-            </thead>
+        </div>
 
-            <tbody>
+        <div class="card">
 
-                {% for plantilla in plantillas %}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
 
-                <tr>
-                    <td>{{ plantilla.nombre }}</td>
-                    <td>{{ plantilla.empresa_prestadora }}</td>
-                    <td>{{ plantilla.archivo }}</td>
-                    <td> 
-                        <a href="{{ url_for('editar_plantilla', id=plantilla.id) }}" class="btn-primary">Editar</a>
-                        <form method="POST" action="{{ url_for('eliminar_plantilla', id=plantilla.id) }}" style="display:inline;" onsubmit="
-                            return confirm(
-                                '¿Eliminar plantilla?'
-                            );
-                        ">
-                            <button type="submit" class="btn-danger">
-                                Eliminar
-                            </button>
+                <h2>
+                    Plantillas Registradas
+                </h2>
 
-                        </form>
-                    </td>
-                </tr>
+                <a href="{{ url_for('nueva_plantilla') }}" class="btn">
+                    + Nueva Plantilla
+                </a>
 
-                {% endfor %}
+            </div>
 
-            </tbody>
+            <table>
 
-        </table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Empresa Prestadora</th>
+                        <th>Archivo</th>
+                        <th style="width:220px; text-align:center;">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
 
-    </body>
+                <tbody>
 
-</html>
+                {% if plantillas %}
+
+                    {% for plantilla in plantillas %}
+
+                    <tr>
+                        <td>{{ plantilla.nombre }}</td>
+                        <td> {{ plantilla.empresa_prestadora }}</td>
+                        <td> {{ plantilla.archivo }}</td>
+                        <td style="text-align:center;white-space:nowrap;">
+
+                            <a href="{{ url_for('editar_plantilla',id=plantilla.id) }}" class="btn-primary">
+                                Editar
+                            </a>
+
+                            <form method="POST" action="{{ url_for('eliminar_plantilla',id=plantilla.id) }}"style="display:inline-block;"
+                                onsubmit="
+                                    return confirm(
+                                        '¿Desea eliminar esta plantilla?'
+                                    );
+                                "
+                            >
+                                <button type="submit" class="btn-danger">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="4" style="text-align:center;padding:30px;color:#64748b;">
+                            No existen plantillas registradas.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+{% endblock %}

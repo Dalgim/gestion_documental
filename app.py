@@ -3,7 +3,7 @@
 from flask import Flask, render_template, request, redirect, send_file, jsonify, flash, url_for, session
 from flask_login import login_manager, login_user, logout_user, login_required, current_user, LoginManager
 from services.generador_documentos import generar_contrato, actualizar_contrato, fecha_letra
-from models.models import db, Cliente, Proyecto, Contrato, Trabajador, Users, PlantillaContrato
+from models.models import db, Cliente, Proyecto, Contrato, Trabajador, Users, PlantillaContrato, Empresa
 from werkzeug.security import check_password_hash
 from flask_migrate import Migrate
 from datetime import datetime
@@ -172,10 +172,11 @@ def nuevo_cliente():
 def proyectos():
 
     proyectos = Proyecto.query.all()
+    #empresas = Empresa.query.all()
 
     return render_template(
         'servicios.html',
-        proyectos=proyectos
+        proyectos = proyectos
     )
 
 # Ruta para la generacion de los servicios 
@@ -183,14 +184,16 @@ def proyectos():
 @login_required
 def nuevo_proyecto():
 
+    empresas = Empresa.query.all()
+
     if request.method == 'POST':
 
         proyecto = Proyecto(
             nombre_proyecto=request.form['nombre_proyecto'],
             folio_repse=request.form['folio_repse'],
             act_repse=request.form['act_repse'],
-            nom_empresa=request.form['nom_empresa'],
-            tipo_servicio=request.form['tipo_servicio']
+            tipo_servicio=request.form['tipo_servicio'],
+            empresa_id=request.form['empresa_id']
         )
 
         db.session.add(proyecto)
@@ -201,7 +204,8 @@ def nuevo_proyecto():
         return redirect('/proyectos')
 
     return render_template(
-        'nuevo_proyecto.html'
+        'nuevo_proyecto.html',
+        empresas = empresas
     )
 
 
@@ -214,11 +218,12 @@ def trabajadores():
     trabajadores = Trabajador.query.all()
 
     proyectos = Proyecto.query.all()
+    #empresas = Empresa.query.all()
 
     return render_template(
         'trabajador.html',
         trabajadores = trabajadores,
-        proyectos = proyectos
+        proyectos = proyectos,
     )
 
 
@@ -227,7 +232,8 @@ def trabajadores():
 @login_required
 def nuevo_trabajador():
     
-    proyectos = Proyecto.query.all()
+    #proyectos = Proyecto.query.all()
+    empresas = Empresa.query.all()
 
     if request.method == 'POST':
 
@@ -239,7 +245,7 @@ def nuevo_trabajador():
             salario_base=request.form['salario_base'],
             actividades=request.form['actividades'],
             puesto=request.form['puesto'],
-            proyecto_id = request.form['proyecto_id']
+            empresa_id = request.form['empresa_id']
         )
 
         db.session.add(trabajador)
@@ -251,7 +257,8 @@ def nuevo_trabajador():
 
     return render_template(
         'nuevo_trabajador.html',
-        proyectos = proyectos
+        #proyectos = proyectos
+        empresas = empresas
     )
 
 
@@ -389,7 +396,7 @@ def generar_contrato_web():
 
             "TIPO_SERVICIO": proyecto.tipo_servicio.upper(),
             
-            "EMPRESA_SERVICIO": proyecto.nom_empresa.upper(),
+            "EMPRESA_SERVICIO": proyecto.empresa.nombre.upper(),
 
             "MONTO": request.form['monto'],
 
@@ -416,7 +423,7 @@ def generar_contrato_web():
         nuevo_contrato = Contrato(
             cliente_id = cliente.id,
             proyecto_id = proyecto.id,
-            nom_empresa = proyecto.nom_empresa,
+            nom_empresa = proyecto.empresa.nombre,
             nom_cliente = cliente.nombre_cliente,
             monto = request.form['monto'],
             forma_pago = request.form['forma_pago'],
@@ -451,12 +458,16 @@ def generar_contrato_web():
     return redirect('/contratos')
 
 # esta ruta sirve para conectar con el javascript
-@app.route('/proyectos/<int:proyecto_id>/trabajadores')
+@app.route('/proyectos/<int:id>/trabajadores')
 @login_required
-def obtener_trabajadores(proyecto_id):
+def trabajadores_por_proyecto(id):
+
+    proyecto = Proyecto.query.get_or_404(id)
 
     trabajadores = Trabajador.query.filter_by(
-        proyecto_id=proyecto_id
+        empresa_id=proyecto.empresa_id
+    ).order_by(
+        Trabajador.nombre_trabajador
     ).all()
 
     return jsonify([
@@ -555,7 +566,148 @@ def nueva_plantilla():
         '/nueva_plantilla.html'
     )
 
-# Ruta para editar los registros de la tabla donde van las plantillas de contratos
+# Ruta para listar las empresas
+@app.route('/empresas')
+@login_required
+def empresas():
+
+    empresas = Empresa.query.order_by(
+        Empresa.nombre
+    ).all()
+
+    return render_template(
+        'listar_empresas.html',
+        empresas=empresas
+    )
+
+# Ruta para crear nueva empresa
+@app.route(
+    '/empresas/nueva',
+    methods=['GET', 'POST']
+)
+@login_required
+def nueva_empresa():
+
+    if request.method == 'POST':
+
+        empresa = Empresa(
+
+            nombre=request.form['nombre'].upper(),
+
+            rfc=request.form.get('rfc','').upper(),
+
+            representante=request.form.get('representante','').upper(),
+
+            domicilio=request.form.get('domicilio','').upper(),
+
+            correo=request.form.get('correo','').lower(),
+
+            telefono=request.form.get('telefono','')
+
+        )
+
+        db.session.add(empresa)
+        db.session.commit()
+
+        flash(
+            'Empresa creada correctamente',
+            'success'
+        )
+
+        return redirect(
+            url_for('empresas')
+        )
+
+    return render_template(
+        'nueva_empresa.html'
+    )
+
+
+# ======================================================================================
+# Seccion para editar clientes, trabajadores, plantillas, servicios, contratos, empresas
+# ======================================================================================
+
+
+# ==========================================
+# Editar Trabajador
+# ==========================================
+@app.route(
+    '/trabajadores/editar/<int:id>',
+    methods=['GET', 'POST']
+)
+@login_required
+def editar_trabajador(id):
+
+    trabajador = Trabajador.query.get_or_404(id)
+
+    empresas = Empresa.query.all()
+
+    if request.method == 'POST':
+
+        trabajador.nombre_trabajador = request.form['nombre_trabajador'].upper()
+        trabajador.curp = request.form['curp'].upper()
+        trabajador.nss = request.form['nss']
+        trabajador.puesto = request.form['puesto'].upper()
+        trabajador.actividad = request.form['actividad'].upper()
+        trabajador.salario_base = request.form['salario_base']
+        trabajador.empresa_id = request.form['empresa_id']
+        db.session.commit()
+
+        flash(
+            'Trabajador actualizado correctamente',
+            'success'
+        )
+
+        return redirect(
+            url_for('trabajadores')
+        )
+
+    return render_template(
+        'editar_trabajador.html',
+        trabajador=trabajador,
+        empresas=empresas
+    )
+
+
+# ==========================================
+# Eliminar Trabajador
+# ==========================================
+@app.route(
+    '/trabajadores/eliminar/<int:id>',
+    methods=['POST']
+)
+@login_required
+def eliminar_trabajador(id):
+
+    trabajador = Trabajador.query.get_or_404(id)
+
+    try:
+
+        db.session.delete(trabajador)
+        db.session.commit()
+
+        flash(
+            'Trabajador eliminado correctamente',
+            'success'
+        )
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        flash(
+            str(e),
+            'danger'
+        )
+
+    return redirect(
+        url_for('trabajadores')
+    )
+
+
+# ==========================================
+# Editar plantilla
+# ==========================================
 @app.route(
     '/plantillas/editar/<int:id>',
     methods=['GET', 'POST']
@@ -603,6 +755,10 @@ def editar_plantilla(id):
     )
 
 
+
+# ==========================================
+# Eliminar plantilla
+# ==========================================
 @app.route(
     '/plantillas/eliminar/<int:id>',
     methods=['POST']
@@ -629,6 +785,274 @@ def eliminar_plantilla(id):
             'listar_plantillas'
         )
     )
+
+
+# ==========================================
+# Editar Cliente
+# ==========================================
+@app.route(
+    '/clientes/editar/<int:id>',
+    methods=['GET', 'POST']
+)
+@login_required
+def editar_cliente(id):
+
+    cliente = Cliente.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        cliente.nombre_cliente = request.form[
+            'nombre_cliente'
+        ].upper()
+
+        cliente.rfc = request.form[
+            'rfc'
+        ].upper()
+
+        cliente.representante = request.form[
+            'representante'
+        ].upper()
+
+        cliente.dom_fiscal = request.form[
+            'dom_fiscal'
+        ].upper()
+
+        cliente.correo = request.form[
+            'correo'
+        ].lower()
+
+        db.session.commit()
+
+        flash(
+            'Cliente actualizado correctamente.',
+            'success'
+        )
+
+        return redirect(
+            url_for(
+                'listar_clientes'
+            )
+        )
+
+    return render_template(
+        'editar_cliente.html',
+        cliente=cliente
+    )
+
+# ==========================================
+# Eliminar Cliente
+# ==========================================
+@app.route(
+    '/clientes/eliminar/<int:id>',
+    methods=['POST']
+)
+@login_required
+def eliminar_cliente(id):
+
+    cliente = Cliente.query.get_or_404(id)
+
+    try:
+        db.session.delete(cliente)
+        db.session.commit()
+        flash(
+            'Cliente eliminado correctamente.',
+            'success'
+        )
+
+    except Exception:
+        db.session.rollback()
+        flash(
+
+            'No fue posible eliminar el cliente. '
+            'Probablemente tiene proyectos o contratos asociados.',
+            'danger'
+        )
+
+    return redirect(
+        url_for(
+            'listar_clientes'
+        )
+    )
+
+
+# ==========================================
+# Editar Servicio
+# ==========================================
+@app.route(
+    '/proyectos/editar/<int:id>',
+    methods=['GET', 'POST']
+)
+@login_required
+def editar_servicio(id):
+
+    proyecto = Proyecto.query.get_or_404(id)
+
+    empresas = Empresa.query.all()
+
+    if request.method == 'POST':
+
+        proyecto.nombre_proyecto = request.form[
+            'nombre_proyecto'
+        ].upper()
+
+        proyecto.folio_repse = request.form[
+            'folio_repse'
+        ].upper()
+
+        proyecto.act_repse = request.form[
+            'act_repse'
+        ].upper()
+
+        proyecto.nom_empresa = request.form[
+            'nom_empresa'
+        ].upper()
+
+        proyecto.tipo_servicio = request.form[
+            'tipo_servicio'
+        ].upper()
+
+        db.session.commit()
+
+        flash(
+            'Servicio actualizado correctamente.',
+            'success'
+        )
+
+        return redirect(
+            url_for(
+                'proyectos'
+            )
+        )
+
+    return render_template(
+
+        'editar_servicios.html',
+        empresas = empresas,
+        proyecto=proyecto
+
+    )
+
+# ==========================================
+# Eliminar Servicio
+# ==========================================
+
+@app.route(
+    '/proyectos/eliminar/<int:id>',
+    methods=['POST']
+)
+@login_required
+def eliminar_servicio(id):
+
+    try:
+
+        servicio = Proyecto.query.get_or_404(id)
+
+        # ❌ NO tocar trabajadores
+
+        db.session.delete(servicio)
+        db.session.commit()
+
+        flash('Servicio eliminado correctamente', 'success')
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print("ERROR REAL:", e)
+
+        flash('Error al eliminar el servicio', 'danger')
+
+    return redirect(url_for('proyectos'))
+
+
+# ==========================================
+# Editar empresa
+# ==========================================
+@app.route(
+    '/empresas/editar/<int:id>',
+    methods=['GET', 'POST']
+)
+@login_required
+def editar_empresa(id):
+
+    empresa = Empresa.query.get_or_404(id)
+
+    if request.method == 'POST':
+
+        empresa.nombre = request.form['nombre'].upper()
+        empresa.rfc = request.form.get('rfc','').upper()
+        empresa.representante = request.form.get('representante','').upper()
+        empresa.domicilio = request.form.get('domicilio','').upper()
+        empresa.correo = request.form.get('correo','').lower()
+        empresa.telefono = request.form.get('telefono','')
+
+        db.session.commit()
+
+        flash(
+            'Empresa actualizada correctamente',
+            'success'
+        )
+
+        return redirect(
+            url_for('empresas')
+        )
+
+    return render_template(
+        'editar_empresa.html',
+        empresa=empresa
+    )
+
+
+# ==========================================
+# Eliminar empresa
+# ==========================================
+@app.route(
+    '/empresas/eliminar/<int:id>',
+    methods=['POST']
+)
+@login_required
+def eliminar_empresa(id):
+
+    empresa = Empresa.query.get_or_404(id)
+
+    try:
+
+        # Validaciones de seguridad
+        if empresa.proyectos:
+            flash(
+                'No se puede eliminar: tiene proyectos asociados',
+                'warning'
+            )
+            return redirect(url_for('empresas'))
+
+        if len(empresa.trabajadores) > 0:
+            flash(
+                'No se puede eliminar: tiene trabajadores asociados',
+                'warning'
+            )
+            return redirect(url_for('empresas'))
+
+        db.session.delete(empresa)
+        db.session.commit()
+
+        flash(
+            'Empresa eliminada correctamente',
+            'success'
+        )
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        flash(
+            str(e),
+            'danger'
+        )
+
+    return redirect(
+        url_for('empresas')
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

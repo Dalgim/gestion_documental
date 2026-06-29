@@ -9,8 +9,8 @@
 
             <div class="form-title">
 
-                <h1>Nuevo Trabajador</h1>
-                <p>Capture la información del trabajador.</p>
+                <h1>Editar Trabajador</h1>
+                <p>Capture la información a editar del trabajador.</p>
 
             </div>
 
@@ -29,28 +29,28 @@
                         <div class="form-group">
 
                             <label>Nombre Completo</label>
-                            <input type="text" name="nombre_trabajador" required style="text-transform: uppercase;">
+                            <input type="text" name="nombre_trabajador" value="{{ trabajador.nombre_trabajador }}" required style="text-transform: uppercase;">
 
                         </div>
 
                         <div class="form-group">
 
                             <label>CURP</label>
-                            <input type="text" name="curp"  maxlength="18" required style="text-transform: uppercase;">
+                            <input type="text" name="curp"  maxlength="18" value="{{ trabajador.curp }}" required style="text-transform: uppercase;">
 
                         </div>
 
                         <div class="form-group">
 
                             <label>RFC</label>
-                            <input type="text" name="rfc" maxlength="13" style="text-transform: uppercase;">
+                            <input type="text" name="rfc" maxlength="13" value="{{ trabajador.rfc }}" style="text-transform: uppercase;">
 
                         </div>
 
                         <div class="form-group">
 
                             <label>NSS</label>
-                            <input type="text" name="nss" maxlength="11" required>
+                            <input type="text" name="nss" value="{{ trabajador.nss }}" maxlength="11" required>
 
                         </div>
 
@@ -66,13 +66,15 @@
 
                             <label>Empresa Prestadora</label>
 
-                            <select name="empresa_id" required>
-
-                                <option value="">Seleccione...</option>
+                            <select name="empresa_id">
 
                                 {% for e in empresas %}
 
-                                    <option value="{{ e.id }}">
+                                    <option value="{{ e.id }}"
+                                        {% if trabajador.empresa_id == e.id %}
+                                            selected
+                                        {% endif %}
+                                    >
 
                                         {{ e.nombre }}
 
@@ -87,7 +89,7 @@
                         <div class="form-group">
 
                             <label>Puesto</label>
-                            <input  type="text" name="puesto" required style="text-transform: uppercase;">
+                            <input  type="text" name="puesto" value="{{ trabajador.puesto }}" required style="text-transform: uppercase;">
 
                         </div>
                         
@@ -95,14 +97,14 @@
                         <div class="form-group">
 
                             <label>Salario Base</label>
-                            <input  type="text" name="salario_base" required>
+                            <input  type="text" name="salario_base" value="{{ trabajador.salario_base }}" required>
 
                         </div>
 
                         <div class="form-group">
 
                             <label>Actividades</label>
-                            <input type="text" name="actividades" required style="text-transform: uppercase;">
+                            <input type="text" name="actividades" value="{{ trabajador.actividades }}" required style="text-transform: uppercase;">
 
                         </div>
 

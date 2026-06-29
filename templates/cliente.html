@@ -28,6 +28,9 @@
                 <th>Domicilio Fiscal</th>
                 <th>Correo</th>
                 <th>Nomenclatura</th>
+                <th style="width:220px; text-align:center;">
+                    Acciones
+                </th>
             </tr>
         </thead>
 
@@ -40,6 +43,24 @@
                     <td>{{ cliente.dom_fiscal }}</td>
                     <td>{{ cliente.correo }}</td>
                     <td>{{ cliente.nomenclatura }}</td>
+                    <td style="text-align:center;white-space:nowrap;">
+
+                        <a href="{{ url_for('editar_cliente',id=cliente.id) }}" class="btn-primary">
+                            Editar
+                        </a>
+
+                        <form method="POST" action="{{ url_for('eliminar_cliente',id=cliente.id) }}"style="display:inline-block;"
+                            onsubmit="
+                                return confirm(
+                                    '¿Desea eliminar este cliente?'
+                                );
+                            "
+                        >
+                            <button type="submit" class="btn-danger">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
 

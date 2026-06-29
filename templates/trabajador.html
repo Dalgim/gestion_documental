@@ -29,7 +29,10 @@
                 <th>Salario Base</th>
                 <th>Puesto</th>
                 <th>Actividades que realiza</th>
-                <th>Sevicio asociado</th>
+                <th>Empresa en la que labora</th>
+                <th style="width:220px; text-align:center;">
+                    Acciones
+                </th>
             </tr>
         </thead>
 
@@ -44,7 +47,30 @@
                     <td>{{ trabajador.salario_base }}</td>
                     <td>{{ trabajador.puesto }}</td>
                     <td>{{ trabajador.actividades }}</td>
-                    <td>{{ trabajador.proyecto_id }}</td>
+                    <td>
+                        {% if trabajador.empresa %}
+                            {{ trabajador.empresa.nombre }}
+                        {% else %}
+                            Sin empresa
+                        {% endif %}
+                    </td>
+                    <td style="text-align:center;white-space:nowrap;">
+                        <a href="{{ url_for('editar_trabajador',id=trabajador.id) }}" class="btn-primary">
+                            Editar Trabajador
+                        </a>
+
+                        <form method="POST" action="{{ url_for('eliminar_trabajador',id=trabajador.id) }}"style="display:inline-block;"
+                            onsubmit="
+                                return confirm(
+                                    '¿Desea eliminar esta Trabajador?'
+                                );
+                            "
+                        >
+                            <button type="submit" class="btn-danger">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
 

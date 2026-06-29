@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-title">
+
+    <h1>Empresas Prestadoras</h1>
+
+</div>
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <a href="{{ url_for('nueva_empresa') }}" class="btn">
+            + Nueva Empresa
+        </a>
+    </div>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>RFC</th>
+                <th>Representante</th>
+                <th style="width:220px; text-align:center;">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for e in empresas %}
+
+            <tr>
+                <td>{{ e.nombre }}</td>
+                <td>{{ e.rfc }}</td>
+                <td>{{ e.representante }}</td>
+                <td style="text-align:center;white-space:nowrap;">
+                    <a href="{{ url_for('editar_empresa', id=e.id) }}" class="btn-primary">
+                        Editar
+                    </a>
+
+                    <form method="POST" action="{{ url_for('eliminar_empresa', id=e.id) }}" style="display:inline-block;" 
+                        onsubmit="return confirm('¿Eliminar empresa?');">
+                            <button class="btn-danger">
+                                Eliminar
+                            </button>
+                    </form>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

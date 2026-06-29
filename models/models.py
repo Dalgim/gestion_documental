@@ -58,6 +58,42 @@ class Cliente(db.Model):
     nomenclatura = db.Column(db.String(10))
 
 
+# Tabla para catalogo de empresas prestadoras de servicio
+class Empresa(db.Model):
+
+    __tablename__ = "dim_empresas"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    nombre = db.Column(db.String(200), nullable=False, unique=True)
+
+    rfc = db.Column(db.String(13))
+
+    representante = db.Column(db.String(200))
+
+    domicilio = db.Column(db.String(300))
+
+    correo = db.Column(db.String(150))
+
+    telefono = db.Column(db.String(20))
+
+    proyectos = db.relationship(
+        "Proyecto",
+        backref="empresa",
+        lazy=True
+
+    )
+
+    trabajadores = db.relationship(
+        "Trabajador",
+        backref="empresa",
+        lazy=True
+    )
+
+    def __repr__(self):
+        return self.nombre
+
+
 # tabla catalogos de servicios especializados
 class Proyecto(db.Model):
 
@@ -71,15 +107,19 @@ class Proyecto(db.Model):
 
     act_repse = db.Column(db.String(250))
 
-    nom_empresa = db.Column(db.String(300))
-
     tipo_servicio = db.Column(db.String(100))
 
-    trabajadores = db.relationship(
-        'Trabajador',
-        backref='proyecto',
-        lazy=True
+    empresa_id = db.Column(
+
+        db.Integer,
+        db.ForeignKey(
+            "dim_empresas.id"
+        ),
+        nullable=False
+
     )
+
+
 
 # tabla catalogo de trabajadores
 class Trabajador(db.Model):
@@ -102,9 +142,11 @@ class Trabajador(db.Model):
 
     puesto = db.Column(db.String(300))
 
-    proyecto_id = db.Column(
+    empresa_id = db.Column(
         db.Integer,
-        db.ForeignKey('dim_servicios.id'),
+        db.ForeignKey(
+            "dim_empresas.id"
+        ),
         nullable=False
     )
 

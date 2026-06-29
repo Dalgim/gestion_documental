@@ -15,60 +15,107 @@
 
 <body>
 
-<div class="layout">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-container">
+                {% for categoria, mensaje in messages %}
+                    <div class="flash-message flash-{{ categoria }}">
 
-    <aside class="sidebar">
+                        {{ mensaje }}
 
-        <div class="sidebar-logo">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
-            <h2>GESTION DOCUMENTAL</h2>
+    <section class="page-content">
+
+        <div class="layout">
+
+            <aside class="sidebar">
+
+                <div class="sidebar-logo">
+
+                    <h2>GESTION DOCUMENTAL</h2>
+
+                </div>
+
+                <nav>
+
+                    <a href="{{ url_for('clientes') }}">
+                        Clientes
+                    </a>
+
+                    <a href="{{ url_for('empresas') }}">
+                        Empresas Prestadoras
+                    </a>
+
+                    <a href="{{ url_for('proyectos') }}">
+                        Servicios
+                    </a>
+
+                    <a href="{{ url_for('trabajadores') }}">
+                        Trabajadores
+                    </a>
+
+                    <a href="{{ url_for('contratos') }}">
+                        Contratos
+                    </a>
+
+                    <a href="{{ url_for('listar_plantillas') }}">
+                        Almacen de plantillas de contratos
+                    </a>
+
+                    <a href="{{ url_for('logout') }}">
+                        Cerrar Sesión
+                    </a>
+
+                </nav>
+
+            </aside>
+
+            <main class="content">
+
+                <header class="topbar">
+
+                    Bienvenido {{ current_user.nombre_usuario }}
+
+                </header>
+
+                <section class="page-content">
+
+                    {% block content %}
+                    {% endblock %}
+
+                </section>
+
+            </main>
 
         </div>
+    
+    </section>
 
-        <nav>
 
-            <a href="{{ url_for('clientes') }}">
-                Clientes
-            </a>
-
-            <a href="{{ url_for('proyectos') }}">
-                Servicios
-            </a>
-
-            <a href="{{ url_for('trabajadores') }}">
-                Trabajadores
-            </a>
-
-            <a href="{{ url_for('contratos') }}">
-                Contratos
-            </a>
-
-            <a href="{{ url_for('logout') }}">
-                Cerrar Sesión
-            </a>
-
-        </nav>
-
-    </aside>
-
-    <main class="content">
-
-        <header class="topbar">
-
-            Bienvenido {{ current_user.nombre_usuario }}
-
-        </header>
-
-        <section class="page-content">
-
-            {% block content %}
-            {% endblock %}
-
-        </section>
-
-    </main>
-
-</div>
+    <script>
+        document.addEventListener(
+            'DOMContentLoaded',
+            function(){
+                setTimeout(
+                    function(){
+                        document
+                        .querySelectorAll(
+                            '.flash-message'
+                        ).forEach(
+                            function(alerta){
+                                alerta.remove();
+                            }
+                        );
+                    },5000
+                );
+            }
+        );
+    </script>
 
 </body>
 

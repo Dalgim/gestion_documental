@@ -3,19 +3,12 @@
 {% block content %}
 
 <h1 class="page-title">
-
     Servicios
-
 </h1>
 
 <div class="card">
-
-    <a
-        href="{{ url_for('nuevo_proyecto') }}"
-        class="btn"
-    >
+    <a href="{{ url_for('nuevo_proyecto') }}" class="btn">
         Nuevo Servicio
-
     </a>
 
     <br><br>
@@ -28,6 +21,9 @@
                 <th>Folio Actividad REPSE</th>
                 <th>Empresa servicio</th>
                 <th>Tipo Servicio</th>
+                <th style="width:220px; text-align:center;">
+                    Acciones
+                </th>
 
             </tr>
         </thead>
@@ -39,8 +35,31 @@
                     <td>{{ proyecto.nombre_proyecto }}</td>
                     <td>{{ proyecto.folio_repse }}</td>
                     <td>{{ proyecto.act_repse }}</td>
-                    <td>{{ proyecto.nom_empresa }}</td>
+                    <td>
+                        {% if proyecto.empresa %}
+                            {{ proyecto.empresa.nombre }}
+                        {% else %}
+                            Sin empresa
+                        {% endif %}
+                    </td>
                     <td>{{ proyecto.tipo_servicio }}</td>
+                    <td style="text-align:center;white-space:nowrap;">
+                        <a href="{{ url_for('editar_servicio',id=proyecto.id) }}" class="btn-primary">
+                            Editar
+                        </a>
+
+                        <form method="POST" action="{{ url_for('eliminar_servicio',id=proyecto.id) }}"style="display:inline-block;"
+                            onsubmit="
+                                return confirm(
+                                    '¿Desea eliminar esta plantilla?'
+                                );
+                            "
+                        >
+                            <button type="submit" class="btn-danger">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
 

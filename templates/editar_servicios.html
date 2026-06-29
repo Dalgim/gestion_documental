@@ -10,8 +10,8 @@
 
             <div class="form-title">
 
-                <h1>Nuevo Servicio Especializado</h1>
-                <p>  Registro de proyecto / servicio REPSE </p>
+                <h1>Servicio Especializado</h1>
+                <p>  Edicion de servicios </p>
 
             </div>
 
@@ -27,7 +27,7 @@
                         <div class="form-group">
 
                             <label>Nombre Servicio</label>
-                            <input type="text" name="nombre_proyecto" required>
+                            <input type="text" name="nombre_proyecto" value="{{ proyecto.nombre_proyecto }}" required>
 
                         </div>
 
@@ -35,7 +35,7 @@
                         <div class="form-group">
 
                             <label>Folio REPSE</label>
-                            <input type="text" name="folio_repse" required>
+                            <input type="text" name="folio_repse" value="{{ proyecto.folio_repse }}" required>
 
                         </div>
 
@@ -43,7 +43,7 @@
                         <div class="form-group">
 
                             <label>Folio Actividad REPSE</label>
-                            <input type="text" name="act_repse">
+                            <input type="text" name="act_repse" value="{{ proyecto.act_repse }}">
 
                         </div>
 
@@ -54,19 +54,26 @@
                         <!-- EMPRESA -->
                         <div class="form-group">
 
-                            <label>Empresa Prestadora del Servicio</label>
+                            <label>Empresa prestadora del servicio</label>
+
                             <select name="empresa_id" required>
-                                <option value="">Seleccione...</option>
+
+                                <option value="">Seleccione una empresa</option>
 
                                 {% for e in empresas %}
 
-                                    <option value="{{ e.id }}">
+                                    <option value="{{ e.id }}"
+                                        {% if proyecto.empresa_id == e.id %}
+                                            selected
+                                        {% endif %}
+                                    >
 
                                         {{ e.nombre }}
 
                                     </option>
 
                                 {% endfor %}
+
                             </select>
 
                         </div>

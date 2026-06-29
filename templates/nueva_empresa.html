@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nuevo Cliente</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
+    </head>
+    <body>
+
+        <div class="form-container">
+
+            <div class="form-title">
+
+                <h2>Nueva Empresa Prestadora</h2>
+                <p>Registro de clientes para generación de contratos.</p>
+
+            </div>
+
+            <div class="form-card">
+                <form method="POST">
+
+                    <div class="form-grid">
+
+                        <div class="section-title full-width">
+
+                            Información General
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" class="mayusculas" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>RFC</label>
+                            <input type="text" name="rfc" class="mayusculas" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Representante</label>
+                            <input type="text" name="representante" class="mayusculas" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Domicilio</label>
+                            <input type="text" name="domicilio" class="mayusculas" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="email" name="correo" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" name="telefono" required>
+                        </div>
+
+                        <div class="form-actions">
+
+                            <a href="{{ url_for('empresas') }}" class="btn-secondary">
+                                Volver
+                            </a>
+
+                            <button type="submit" class="btn-primary">
+                                Guardar Empresa
+                            </button>
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
