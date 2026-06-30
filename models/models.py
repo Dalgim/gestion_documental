@@ -26,7 +26,7 @@ class Users(UserMixin, db.Model):
 
     nombre = db.Column(db.String(200))
 
-    fecha_nacimiento = db.Date
+    fecha_nacimiento = db.Column(db.Date)
 
     nombre_usuario = db.Column(db.String(200))
 
@@ -148,7 +148,13 @@ class Trabajador(db.Model):
 
     puesto = db.Column(db.String(300))
 
+    fecha_ingreso = db.Column(db.Date)
+
+    fecha_baja = db.Column(db.Date)
+
     activo = db.Column(db.Boolean(), default=True)
+
+    encargado = db.Column(db.String(300)) 
 
     empresa_id = db.Column(
         db.Integer,

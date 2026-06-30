@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+{% extends 'base.html' %}
 
-    <meta charset="UTF-8">
-    <title>Importar Empresas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-
-</head>
-
-<body>
+{% block content %}
 
     <div class="form-container">
 
@@ -55,6 +47,4 @@
 
     </div>
 
-</body>
-
-</html>
+{% endblock %}

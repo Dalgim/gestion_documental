@@ -10,15 +10,16 @@
 
 <div class="card">
 
-    <a
-        href="{{ url_for('nuevo_trabajador') }}"
-        class="btn"
-    >
+    <a href="{{ url_for('nuevo_trabajador') }}" class="btn">
         Nuevo Trabajador
     </a>
 
+    <a href="{{ url_for('importar_trabajadores') }}" class="btn">
+        Importar Excel
+    </a>
+
     <br><br>
-    <table>
+    <table id="tablaTrabajadores">
         <thead>
             <tr>
                 <th>ID</th>
@@ -77,5 +78,20 @@
         </tbody>
     </table>
 </div>
+
+{% block scripts %}
+
+<script src="{{ url_for('static',
+filename='js/datatables.js') }}"></script>
+
+<script>
+
+    inicializarTabla(
+        "#tablaTrabajadores"
+    );
+
+</script>
+
+{% endblock %}
 
 {% endblock %}

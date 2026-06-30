@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Nuevo Cliente</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-    </head>
-    <body>
+{% extends 'base.html' %}
 
+{% block content %}
 
         <div class="form-container">
 
@@ -121,5 +116,4 @@
 
         </script>
 
-    </body>
-</html>
+{% endblock %}

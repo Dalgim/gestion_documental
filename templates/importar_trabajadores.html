@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="form-title">
+
+        <h1>Importar Trabajadores</h1>
+        <p> Carga masiva desde Excel</p>
+
+    </div>
+
+    <div class="form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+
+                <label>Archivo Excel</label>
+                <input type="file" name="archivo" accept=".xlsx,.xls" required>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a href="{{ url_for('trabajadores') }}" class="btn-secondary">
+                    Volver
+                </a>
+
+                <button type="submit" class="btn-primary">
+                    Importar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
