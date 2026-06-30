@@ -10,8 +10,8 @@
 
             <div class="form-title">
 
-                <h2>Nueva Empresa Prestadora</h2>
-                <p>Registro de clientes para generación de contratos.</p>
+                <h2>Editar empresa prestadora</h2>
+                <p>Edita el registro de la empresa</p>
 
             </div>
 
@@ -48,28 +48,89 @@
 
                         <div class="form-group">
                             <label>Correo</label>
-                            <input type="email" name="correo" value="{{ empresa.correo }}" required>
+                            <input type="email" name="correo" value="{{ empresa.correo }}">
                         </div>
 
                         <div class="form-group">
                             <label>Teléfono</label>
-                            <input type="text" name="telefono" value="{{ empresa.telefono }}" required>
+                            <input type="text" name="telefono" value="{{ empresa.telefono }}">
                         </div>
 
-                        <div class="form-actions">
+                        <!-- EMPRESA -->
+                        <div class="form-group">
 
-                            <a href="{{ url_for('empresas') }}" class="btn-secondary">
-                                Volver
-                            </a>
+                            <label>Nivel</label>
 
-                            <button type="submit" class="btn-primary">
-                                Guardar Empresa
-                            </button>
+                            <select name="nivel">
+
+                                <option value="1"
+                                    {% if empresa.nivel == 1 %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Nivel 1
+                                </option>
+
+                                <option value="2"
+                                    {% if empresa.nivel == 2 %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Nivel 2
+                                </option>
+
+                                <option value="3"
+                                    {% if empresa.nivel == 3 %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Nivel 3
+                                </option>
+
+                            </select>
 
                         </div>
+
+                        <div class="form-group">
+
+                            <label>Estado de la empresa</label>
+
+                            <select name="activo" required>
+
+                                <option value="1"
+                                    {% if empresa.activo %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Activa
+                                </option>
+
+                                <option value="0"
+                                    {% if not empresa.activo %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Inactiva
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('empresas') }}" class="btn-secondary">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-primary">
+                            Guardar Empresa
+                        </button>
+
                     </div>
 
                 </form>
+
             </div>
 
         </div>

@@ -5,9 +5,12 @@ from flask_login import login_manager, login_user, logout_user, login_required, 
 from services.generador_documentos import generar_contrato, actualizar_contrato, fecha_letra, regenerar_contrato
 from models.models import db, Cliente, Proyecto, Contrato, Trabajador, Users, PlantillaContrato, Empresa
 from werkzeug.security import check_password_hash
+from services.importar_empresas import leer_excel, procesar_importacion_empresas
+from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from datetime import datetime
 import secrets
+import os
 
 app = Flask(__name__)
 
@@ -20,11 +23,15 @@ app.config[
     'SECRET_KEY'
 ] = secrets.token_hex(32)
 
+# Agregamos la funcionalidad para poder hacer importaciones a base de datos
+app.config["UPLOAD_FOLDER"] = os.path.join(
+    os.getcwd(),
+    "uploads"
+)
+
 # Generamos el login usando la libreria flask_login
 login_manager = LoginManager()
-
 login_manager.init_app(app)
-
 login_manager.login_view = 'login'
 
 db.init_app(app)
@@ -383,35 +390,21 @@ def generar_contrato_web():
         contexto = {
 
             "NOMENCLATURA": cliente.nomenclatura.upper(),
-
             "CLIENTE": cliente.nombre_cliente.upper(),
-
             "RFC": cliente.rfc.upper(),
-
             "DOM_FISCAL": cliente.dom_fiscal.upper(),
-
             "REPRESENTANTE": cliente.representante.upper(),
-
             "PROYECTO": proyecto.nombre_proyecto.upper(),
-
             "TIPO_SERVICIO": proyecto.tipo_servicio.upper(),
-            
             "EMPRESA_SERVICIO": proyecto.empresa.nombre.upper(),
-
             "MONTO": request.form['monto'],
-
             "VIGENCIA": f"{meses} MESES",
-
             "INICIO":
                 #fecha_inicio.strftime("%d/%m/%Y"),
                 fecha_letra(fecha_inicio),
-
             "FIN": fecha_fin.strftime("%d/%m/%Y"),
-
             "FORMA_PAGO": request.form['forma_pago'],
-
             "LUGAR_FIRMA": request.form['lugar_firma'].upper(),
-
             "trabajadores": trabajadores
         }
 
@@ -599,17 +592,13 @@ def nueva_empresa():
         empresa = Empresa(
 
             nombre=request.form['nombre'].upper(),
-
             rfc=request.form.get('rfc','').upper(),
-
             representante=request.form.get('representante','').upper(),
-
             domicilio=request.form.get('domicilio','').upper(),
-
             correo=request.form.get('correo','').lower(),
-
-            telefono=request.form.get('telefono','')
-
+            telefono=request.form.get('telefono',''),
+            nivel=request.form['nivel'],
+            activo=request.form["activo"] == "1"
         )
 
         db.session.add(empresa)
@@ -626,6 +615,87 @@ def nueva_empresa():
 
     return render_template(
         'nueva_empresa.html'
+    )
+
+
+# Agregamos ruta para poder generar la importación de un excel a base de datos
+@app.route(
+    "/empresas/importar",
+    methods=["GET", "POST"]
+)
+@login_required
+def importar_empresas():
+
+    if request.method == "POST":
+
+        archivo = request.files.get("archivo")
+
+        if not archivo:
+
+            flash(
+                "Debe seleccionar un archivo.",
+                "warning"
+            )
+
+            return redirect(
+                url_for(
+                    "importar_empresas"
+                )
+            )
+
+        nombre_archivo = secure_filename(
+            archivo.filename
+        )
+
+        ruta_archivo = os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            nombre_archivo
+        )
+
+        archivo.save(
+            ruta_archivo
+        )
+
+        try:
+            df = leer_excel(ruta_archivo)
+
+            resultado = procesar_importacion_empresas(
+                df,
+                db
+            )
+
+            flash(
+
+                f"""
+                Importación terminada.
+                Empresas importadas: {resultado['importadas']}
+                Empresas duplicadas: {resultado['duplicadas']}
+                Errores: {len(resultado['errores'])}
+                """,
+                "success"
+            )
+
+            for error in resultado["errores"]:
+
+                flash(
+                    error,
+                    "warning"
+                )
+
+        except Exception as e:
+            flash(
+                str(e),
+                "danger"
+            )
+
+        return redirect(
+            url_for(
+                "empresas"
+            )
+        )
+
+    return render_template(
+        "importar_empresas.html"
     )
 
 
@@ -982,6 +1052,12 @@ def editar_empresa(id):
 
     empresa = Empresa.query.get_or_404(id)
 
+    niveles = [
+        "1",
+        "2",
+        "3"
+    ]
+
     if request.method == 'POST':
 
         empresa.nombre = request.form['nombre'].upper()
@@ -990,6 +1066,8 @@ def editar_empresa(id):
         empresa.domicilio = request.form.get('domicilio','').upper()
         empresa.correo = request.form.get('correo','').lower()
         empresa.telefono = request.form.get('telefono','')
+        empresa.nivel = request.form['nivel']
+        empresa.activo = request.form["activo"] == "1"
 
         db.session.commit()
 
@@ -1004,7 +1082,8 @@ def editar_empresa(id):
 
     return render_template(
         'editar_empresa.html',
-        empresa=empresa
+        empresa=empresa,
+        niveles=niveles
     )
 
 

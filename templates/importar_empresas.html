@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Importar Empresas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
+
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <div class="form-title">
+            <h1>Importar Empresas</h1>
+            <p> Carga masiva mediante archivo Excel </p>
+
+        </div>
+
+        <div class="form-card">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="form-grid">
+
+                    <div class="section-title full-width">
+                        Archivo Excel
+                    </div>
+
+                    <div class="form-group full-width">
+
+                        <label> Seleccione el archivo</label>
+                        <input type="file" name="archivo" accept=".xlsx" required>
+
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="{{ url_for('empresas') }}" class="btn-secondary">
+                        Volver
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Importar Datos
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

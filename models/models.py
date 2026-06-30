@@ -77,6 +77,12 @@ class Empresa(db.Model):
 
     telefono = db.Column(db.String(20))
 
+    nivel = db.Column(db.Integer)
+
+    regimen_fiscal = db.Column(db.String(300))
+
+    activo = db.Column(db.Boolean(), default=True)
+
     proyectos = db.relationship(
         "Proyecto",
         backref="empresa",
@@ -141,6 +147,8 @@ class Trabajador(db.Model):
     actividades = db.Column(db.String(400))
 
     puesto = db.Column(db.String(300))
+
+    activo = db.Column(db.Boolean(), default=True)
 
     empresa_id = db.Column(
         db.Integer,

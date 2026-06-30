@@ -21,9 +21,7 @@
                     <div class="form-grid">
 
                         <div class="section-title full-width">
-
                             Información General
-
                         </div>
 
                         <div class="form-group">
@@ -33,7 +31,7 @@
 
                         <div class="form-group">
                             <label>RFC</label>
-                            <input type="text" name="rfc" class="mayusculas" required>
+                            <input type="text" name="rfc" maxlength="13" class="mayusculas" required>
                         </div>
                         
                         <div class="form-group">
@@ -53,23 +51,66 @@
 
                         <div class="form-group">
                             <label>Teléfono</label>
-                            <input type="text" name="telefono" required>
+                            <input type="text" maxlength="10" name="telefono" required>
                         </div>
 
-                        <div class="form-actions">
+                        <!-- TIPO SERVICIO -->
+                        <div class="form-group">
 
-                            <a href="{{ url_for('empresas') }}" class="btn-secondary">
-                                Volver
-                            </a>
+                            <label>Nivel</label>
 
-                            <button type="submit" class="btn-primary">
-                                Guardar Empresa
-                            </button>
+                            <select name="nivel">
+
+                                <option value="1">
+                                    NIVEL 1
+                                </option>
+
+                                <option value="2">
+                                    NIVEL 2
+                                </option>
+
+                                <option value="3">
+                                    NIVEL 3
+                                </option>
+
+                            </select>
 
                         </div>
+
+                        <div class="form-group">
+
+                            <label>Estado de la empresa</label>
+
+                            <select name="activo" required>
+
+                                <option value="1" selected>
+                                    Activa
+                                </option>
+
+                                <option value="0">
+                                    Inactiva
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('empresas') }}" class="btn-secondary">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-primary">
+                            Guardar Empresa
+                        </button>
+
                     </div>
 
                 </form>
+
             </div>
 
         </div>

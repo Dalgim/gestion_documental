@@ -13,7 +13,13 @@
         <a href="{{ url_for('nueva_empresa') }}" class="btn">
             + Nueva Empresa
         </a>
+
+        <a href="{{ url_for('importar_empresas') }}" class="btn">
+            Importar Empresas
+        </a>
     </div>
+
+    
 
 
     <table>
@@ -22,6 +28,8 @@
                 <th>Nombre</th>
                 <th>RFC</th>
                 <th>Representante</th>
+                <th>Nivel</th>
+                <th>Empresa Activa</th>
                 <th style="width:220px; text-align:center;">
                     Acciones
                 </th>
@@ -35,6 +43,18 @@
                 <td>{{ e.nombre }}</td>
                 <td>{{ e.rfc }}</td>
                 <td>{{ e.representante }}</td>
+                <td>{{ e.nivel }}</td>
+                <td>
+                    {% if e.activo %}
+                        <span class="badge badge-success">
+                            SI
+                        </span>
+                    {% else %}
+                        <span class="badge badge-danger">
+                            NO
+                        </span>
+                    {% endif %}
+                </td>
                 <td style="text-align:center;white-space:nowrap;">
                     <a href="{{ url_for('editar_empresa', id=e.id) }}" class="btn-primary">
                         Editar
