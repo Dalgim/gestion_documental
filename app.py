@@ -4,8 +4,9 @@ from flask import Flask, render_template, request, redirect, send_file, jsonify,
 from flask_login import login_manager, login_user, logout_user, login_required, current_user, LoginManager
 from services.generador_documentos import generar_contrato, actualizar_contrato, fecha_letra, regenerar_contrato
 from models.models import db, Cliente, Proyecto, Contrato, Trabajador, Users, PlantillaContrato, Empresa
-from werkzeug.security import check_password_hash
 from services.importar_empresas import leer_excel, procesar_importacion_empresas
+from services.importar_trabajadores import leer_excel, procesar_importacion_trabajadores
+from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from datetime import datetime
@@ -605,7 +606,7 @@ def nueva_empresa():
     )
 
 
-# Agregamos ruta para poder generar la importación de un excel a base de datos
+# Agregamos ruta para poder generar la importación de un excel a base de datos de empresas
 @app.route("/empresas/importar",methods=["GET", "POST"])
 @login_required
 def importar_empresas():
@@ -682,6 +683,62 @@ def importar_empresas():
         "importar_empresas.html"
     )
 
+# Agregamos ruta para poder generar la importación de un excel a base de datos de trabajadores
+@app.route( '/trabajadores/importar', methods=['GET', 'POST'])
+@login_required
+def importar_trabajadores():
+
+    if request.method == 'POST':
+        if 'archivo' not in request.files:
+            flash(
+                'Seleccione un archivo.',
+                'danger'
+            )
+            return redirect(request.url)
+
+        archivo = request.files['archivo']
+
+        if archivo.filename == '':
+            flash(
+                'Seleccione un archivo.',
+                'danger'
+            )
+            return redirect(request.url)
+
+        try:
+            df = leer_excel(archivo)
+            resultado = procesar_importacion_trabajadores(
+                df,
+                db
+            )
+            flash(
+                f"Se importaron {resultado['importados']} trabajadores.",
+                "success"
+            )
+            if resultado['errores']:
+                for error in resultado['errores']:
+                    flash(
+                        error,
+                        "warning"
+                    )
+
+        except Exception as e:
+            flash(
+                str(e),
+                "danger"
+            )
+
+        return redirect(
+            url_for(
+                'trabajadores'
+            )
+        )
+
+    return render_template(
+        'importar_trabajadores.html'
+    )
+
+
 
 # ======================================================================================
 # Seccion para editar clientes, trabajadores, plantillas, servicios, contratos, empresas
@@ -704,7 +761,7 @@ def editar_trabajador(id):
         trabajador.curp = request.form['curp'].upper()
         trabajador.nss = request.form['nss']
         trabajador.puesto = request.form['puesto'].upper()
-        trabajador.actividad = request.form['actividad'].upper()
+        trabajador.actividad = request.form['actividades'].upper()
         trabajador.salario_base = request.form['salario_base']
         trabajador.empresa_id = request.form['empresa_id']
         db.session.commit()
