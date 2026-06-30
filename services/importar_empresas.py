@@ -1,5 +1,5 @@
-import re
-import pandas as pd
+import re # libreria para el manejo de expresiones regulares en python
+import pandas as pd # libreria para el manejo de excel con python
 from models.models import db, Empresa
 
 #Aqui definimos los campos que vamos a requerir dentro del excel para importar datos
@@ -146,7 +146,8 @@ def procesar_importacion_empresas(df, db):
                 correo=str(fila["CORREO"]).strip(),
                 telefono = limpiar_texto(fila["TELEFONO"]),
                 nivel=str(fila["NIVEL"]).strip(),
-                activo = convertir_activo(fila["ACTIVO"])
+                activo = convertir_activo(fila["ACTIVO"]),
+                regimen_fiscal=str(fila["REGIMEN FISCAL"]).strip()
             )
 
             # Guardamos los datos en la base de datos

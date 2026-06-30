@@ -22,7 +22,7 @@
     
 
 
-    <table>
+    <table id="tablaEmpresas">
         <thead>
             <tr>
                 <th>Nombre</th>
@@ -77,5 +77,21 @@
     </table>
 
 </div>
+
+
+{% block scripts %}
+
+<script src="{{ url_for('static',
+filename='js/datatables.js') }}"></script>
+
+<script>
+
+    inicializarTabla(
+        "#tablaEmpresas"
+    );
+
+</script>
+
+{% endblock %}
 
 {% endblock %}

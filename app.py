@@ -103,7 +103,6 @@ def inicio():
     #return render_template('index.html')
     return render_template('base.html')
 
-
 # Definimos la ruta para el alta de clientes
 # establecemos la pagina para el alta
 @app.route('/clientes')
@@ -172,7 +171,6 @@ def nuevo_cliente():
         'nuevo_cliente.html'
     )
 
-
 # Establecemos la ruta inicial para la pagina de carga de servicios
 @app.route('/proyectos')
 @login_required
@@ -214,7 +212,6 @@ def nuevo_proyecto():
         'nuevo_proyecto.html',
         empresas = empresas
     )
-
 
 
 # Definimos la ruta para el alta de trabajadores
@@ -302,9 +299,7 @@ def contratos():
 
 
 # Vista para el formulario de nuevo contrato
-@app.route(
-    '/contratos/nuevo'
-)
+@app.route('/contratos/nuevo')
 @login_required
 def nuevo_contrato():
 
@@ -329,10 +324,7 @@ def nuevo_contrato():
     )
 
 # Aqui se genera el contrato de forma habitual
-@app.route(
-    '/contratos/generar',
-    methods=['GET','POST']
-)
+@app.route('/contratos/generar', methods=['GET','POST'])
 @login_required
 def generar_contrato_web():
 
@@ -520,10 +512,7 @@ def listar_plantillas():
 
 
 # Ruta para guardar las plantillas de contrato por empresa
-@app.route(
-    '/plantillas/nueva',
-    methods=['GET', 'POST']
-)
+@app.route('/plantillas/nueva',methods=['GET', 'POST'])
 @login_required
 def nueva_plantilla():
 
@@ -580,10 +569,7 @@ def empresas():
     )
 
 # Ruta para crear nueva empresa
-@app.route(
-    '/empresas/nueva',
-    methods=['GET', 'POST']
-)
+@app.route('/empresas/nueva',methods=['GET', 'POST'])
 @login_required
 def nueva_empresa():
 
@@ -598,7 +584,8 @@ def nueva_empresa():
             correo=request.form.get('correo','').lower(),
             telefono=request.form.get('telefono',''),
             nivel=request.form['nivel'],
-            activo=request.form["activo"] == "1"
+            activo=request.form["activo"] == "1",
+            regimen_fiscal=request.form["regimen_fiscal"]
         )
 
         db.session.add(empresa)
@@ -619,10 +606,7 @@ def nueva_empresa():
 
 
 # Agregamos ruta para poder generar la importación de un excel a base de datos
-@app.route(
-    "/empresas/importar",
-    methods=["GET", "POST"]
-)
+@app.route("/empresas/importar",methods=["GET", "POST"])
 @login_required
 def importar_empresas():
 
@@ -703,14 +687,10 @@ def importar_empresas():
 # Seccion para editar clientes, trabajadores, plantillas, servicios, contratos, empresas
 # ======================================================================================
 
-
 # ==========================================
 # Editar Trabajador
 # ==========================================
-@app.route(
-    '/trabajadores/editar/<int:id>',
-    methods=['GET', 'POST']
-)
+@app.route('/trabajadores/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_trabajador(id):
 
@@ -748,10 +728,7 @@ def editar_trabajador(id):
 # ==========================================
 # Eliminar Trabajador
 # ==========================================
-@app.route(
-    '/trabajadores/eliminar/<int:id>',
-    methods=['POST']
-)
+@app.route('/trabajadores/eliminar/<int:id>', methods=['POST'])
 @login_required
 def eliminar_trabajador(id):
 
@@ -784,10 +761,7 @@ def eliminar_trabajador(id):
 # ==========================================
 # Editar plantilla
 # ==========================================
-@app.route(
-    '/plantillas/editar/<int:id>',
-    methods=['GET', 'POST']
-)
+@app.route('/plantillas/editar/<int:id>',methods=['GET', 'POST'])
 @login_required
 def editar_plantilla(id):
 
@@ -831,14 +805,10 @@ def editar_plantilla(id):
     )
 
 
-
 # ==========================================
 # Eliminar plantilla
 # ==========================================
-@app.route(
-    '/plantillas/eliminar/<int:id>',
-    methods=['POST']
-)
+@app.route('/plantillas/eliminar/<int:id>', methods=['POST'])
 @login_required
 def eliminar_plantilla(id):
 
@@ -866,10 +836,7 @@ def eliminar_plantilla(id):
 # ==========================================
 # Editar Cliente
 # ==========================================
-@app.route(
-    '/clientes/editar/<int:id>',
-    methods=['GET', 'POST']
-)
+@app.route('/clientes/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_cliente(id):
 
@@ -918,10 +885,7 @@ def editar_cliente(id):
 # ==========================================
 # Eliminar Cliente
 # ==========================================
-@app.route(
-    '/clientes/eliminar/<int:id>',
-    methods=['POST']
-)
+@app.route('/clientes/eliminar/<int:id>', methods=['POST'])
 @login_required
 def eliminar_cliente(id):
 
@@ -954,10 +918,7 @@ def eliminar_cliente(id):
 # ==========================================
 # Editar Servicio
 # ==========================================
-@app.route(
-    '/proyectos/editar/<int:id>',
-    methods=['GET', 'POST']
-)
+@app.route('/proyectos/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_servicio(id):
 
@@ -1011,10 +972,7 @@ def editar_servicio(id):
 # ==========================================
 # Eliminar Servicio
 # ==========================================
-@app.route(
-    '/proyectos/eliminar/<int:id>',
-    methods=['POST']
-)
+@app.route('/proyectos/eliminar/<int:id>', methods=['POST'])
 @login_required
 def eliminar_servicio(id):
 
@@ -1043,10 +1001,7 @@ def eliminar_servicio(id):
 # ==========================================
 # Editar empresa
 # ==========================================
-@app.route(
-    '/empresas/editar/<int:id>',
-    methods=['GET', 'POST']
-)
+@app.route( '/empresas/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_empresa(id):
 
@@ -1090,10 +1045,7 @@ def editar_empresa(id):
 # ==========================================
 # Eliminar empresa
 # ==========================================
-@app.route(
-    '/empresas/eliminar/<int:id>',
-    methods=['POST']
-)
+@app.route('/empresas/eliminar/<int:id>',methods=['POST'])
 @login_required
 def eliminar_empresa(id):
 
@@ -1102,13 +1054,6 @@ def eliminar_empresa(id):
     try:
 
         # Validaciones de seguridad
-        if empresa.proyectos:
-            flash(
-                'No se puede eliminar: tiene proyectos asociados',
-                'warning'
-            )
-            return redirect(url_for('empresas'))
-
         if len(empresa.trabajadores) > 0:
             flash(
                 'No se puede eliminar: tiene trabajadores asociados',
@@ -1138,14 +1083,10 @@ def eliminar_empresa(id):
     )
 
 
-
 # ==========================================
 # Editar contrato
 # ==========================================
-@app.route(
-    '/contratos/editar/<int:id>',
-    methods=['GET', 'POST']
-)
+@app.route('/contratos/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_contrato(id):
 
@@ -1298,10 +1239,7 @@ def editar_contrato(id):
 # ==========================================
 # Eliminar contrato
 # ==========================================
-@app.route(
-    '/contratos/eliminar/<int:id>',
-    methods=['POST']
-)
+@app.route( '/contratos/eliminar/<int:id>', methods=['POST'])
 @login_required
 def eliminar_contrato(id):
 
