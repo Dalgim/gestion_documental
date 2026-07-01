@@ -712,15 +712,33 @@ def importar_trabajadores():
                 db
             )
             flash(
-                f"Se importaron {resultado['importados']} trabajadores.",
+                f"Registros procesados: {resultado['procesados']}",
+                "info"
+            )
+
+            flash(
+                f"Registros importados: {resultado['importados']}",
                 "success"
             )
-            if resultado['errores']:
-                for error in resultado['errores']:
-                    flash(
-                        error,
-                        "warning"
-                    )
+
+            if resultado["advertencias"]:
+                flash("Se encontraron advertencias durante la importación", "warning")
+                
+            for advertencia in resultado["advertencias"]:
+                flash(advertencia, "warning")
+
+            flash(
+                f"Errores encontrados: {resultado['total_errores']}",
+                "warning"
+            )
+            for error in resultado["errores"]:
+                flash(error, "danger")
+
+            if resultado["total_errores"] == 0:
+                flash(
+                    "La importación terminó correctamente.",
+                    "success"
+                )
 
         except Exception as e:
             flash(
