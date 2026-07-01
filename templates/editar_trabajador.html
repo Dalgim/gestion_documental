@@ -1,133 +1,127 @@
-<html>
-    <head>
-        <title>Nuevo Trabajador</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-    </head>
-    <body>
-        <br><br>
-        <div class="form-container">
+{% extends 'base.html' %}
 
-            <div class="form-title">
+{% block content %}
+    <div class="form-container">
 
-                <h1>Editar Trabajador</h1>
-                <p>Capture la información a editar del trabajador.</p>
+        <div class="form-title">
 
-            </div>
-
-            <div class="form-card">
-
-                <form method="POST">
-
-                    <div class="form-grid">
-
-                        <!-- DATOS PERSONALES -->
-
-                        <div class="section-title full-width">
-                            Datos Personales
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>Nombre Completo</label>
-                            <input type="text" name="nombre_trabajador" value="{{ trabajador.nombre_trabajador }}" required style="text-transform: uppercase;">
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>CURP</label>
-                            <input type="text" name="curp"  maxlength="18" value="{{ trabajador.curp }}" required style="text-transform: uppercase;">
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>RFC</label>
-                            <input type="text" name="rfc" maxlength="13" value="{{ trabajador.rfc }}" style="text-transform: uppercase;">
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>NSS</label>
-                            <input type="text" name="nss" value="{{ trabajador.nss }}" maxlength="11" required>
-
-                        </div>
-
-                        <!-- DATOS LABORALES -->
-
-                        <div class="section-title full-width">
-
-                            Información Laboral
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>Empresa Prestadora</label>
-
-                            <select name="empresa_id">
-
-                                {% for e in empresas %}
-
-                                    <option value="{{ e.id }}"
-                                        {% if trabajador.empresa_id == e.id %}
-                                            selected
-                                        {% endif %}
-                                    >
-
-                                        {{ e.nombre }}
-
-                                    </option>
-
-                                {% endfor %}
-
-                            </select>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>Puesto</label>
-                            <input  type="text" name="puesto" value="{{ trabajador.puesto }}" style="text-transform: uppercase;">
-
-                        </div>
-                        
-
-                        <div class="form-group">
-
-                            <label>Salario Base</label>
-                            <input  type="text" name="salario_base" value="{{ trabajador.salario_base }}" required>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>Actividades</label>
-                            <input type="text" name="actividades" value="{{ trabajador.actividades }}" style="text-transform: uppercase;">
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <a href="{{ url_for('trabajadores') }}" class="btn-secondary">
-                            Volver
-                        </a>
-
-                        <button type="submit" class="btn-primary">
-                            Guardar Trabajador
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
+            <h1>Editar Trabajador</h1>
+            <p>Capture la información a editar del trabajador.</p>
 
         </div>
 
-    </body>
+        <div class="form-card">
 
-</html>
+            <form method="POST">
+
+                <div class="form-grid">
+
+                    <!-- DATOS PERSONALES -->
+
+                    <div class="section-title full-width">
+                        Datos Personales
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Nombre Completo</label>
+                        <input type="text" name="nombre_trabajador" value="{{ trabajador.nombre_trabajador }}" required style="text-transform: uppercase;">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>CURP</label>
+                        <input type="text" name="curp"  maxlength="18" value="{{ trabajador.curp }}" required style="text-transform: uppercase;">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>RFC</label>
+                        <input type="text" name="rfc" maxlength="13" value="{{ trabajador.rfc }}" style="text-transform: uppercase;">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>NSS</label>
+                        <input type="text" name="nss" value="{{ trabajador.nss }}" maxlength="11" required>
+
+                    </div>
+
+                    <!-- DATOS LABORALES -->
+
+                    <div class="section-title full-width">
+
+                        Información Laboral
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Empresa Prestadora</label>
+
+                        <select name="empresa_id">
+
+                            {% for e in empresas %}
+
+                                <option value="{{ e.id }}"
+                                    {% if trabajador.empresa_id == e.id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ e.nombre }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Puesto</label>
+                        <input  type="text" name="puesto" value="{{ trabajador.puesto }}" style="text-transform: uppercase;">
+
+                    </div>
+                    
+
+                    <div class="form-group">
+
+                        <label>Salario Base</label>
+                        <input  type="text" name="salario_base" value="{{ trabajador.salario_base }}" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Actividades</label>
+                        <input type="text" name="actividades" value="{{ trabajador.actividades }}" style="text-transform: uppercase;">
+
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="{{ url_for('trabajadores') }}" class="btn-secondary">
+                        Volver
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Guardar Trabajador
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}

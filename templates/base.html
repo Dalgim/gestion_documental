@@ -29,72 +29,73 @@
         {% endif %}
     {% endwith %}
 
-    <section class="page-content">
 
-        <div class="layout">
+    <div class="layout">
 
-            <aside class="sidebar">
+        <aside class="sidebar">
 
-                <div class="sidebar-logo">
+            <div class="sidebar-logo">
 
-                    <h2>GESTION DOCUMENTAL</h2>
+                <h2>GESTION DOCUMENTAL</h2>
 
-                </div>
+            </div>
 
-                <nav>
+            <nav>
 
-                    <a href="{{ url_for('clientes') }}">
-                        Clientes
-                    </a>
+                <a href="{{ url_for('clientes') }}">
+                    Clientes
+                </a>
 
-                    <a href="{{ url_for('empresas') }}">
-                        Empresas Prestadoras
-                    </a>
+                <a href="{{ url_for('empresas') }}">
+                    Empresas Prestadoras
+                </a>
 
-                    <a href="{{ url_for('proyectos') }}">
-                        Servicios
-                    </a>
+                <a href="{{ url_for('proyectos') }}">
+                    Servicios
+                </a>
 
-                    <a href="{{ url_for('trabajadores') }}">
-                        Trabajadores
-                    </a>
+                <a href="{{ url_for('trabajadores') }}">
+                    Trabajadores
+                </a>
 
+                {% if current_user.rol == "ADMINISTRADOR" %}
                     <a href="{{ url_for('contratos') }}">
                         Contratos
                     </a>
+                {% endif %}
 
-                    <a href="{{ url_for('listar_plantillas') }}">
-                        Almacen de plantillas de contratos
-                    </a>
+                <a href="{{ url_for('listar_plantillas') }}">
+                    Almacen de plantillas de contratos
+                </a>
 
-                    <a href="{{ url_for('logout') }}">
-                        Cerrar Sesión
-                    </a>
+                <a href="{{ url_for('logout') }}">
+                    Cerrar Sesión
+                </a>
 
-                </nav>
+            </nav>
 
-            </aside>
+        </aside>
 
-            <main class="content">
+        <main class="content">
 
-                <header class="topbar">
+            <header class="topbar">
 
-                    Bienvenido {{ current_user.nombre_usuario }}
+                Bienvenido {{ current_user.nombre_usuario }}
 
-                </header>
+            </header>
 
-                <section class="page-content">
+            <section class="page-content">
 
-                    {% block content %}
-                    {% endblock %}
+                {% block content %}
+                {% endblock %}
 
-                </section>
+            </section>
 
-            </main>
+        </main>
 
-        </div>
+    </div>
     
-    </section>
+
 
 
     <script>

@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'base.html' %}
 
-<head>
-
-    <meta charset="UTF-8">
-    <title>Editar Contrato</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-
-</head>
-
-<body>
-
-    <br><br>
+{% block content %}
 
     <div class="form-container">
 
@@ -87,12 +76,7 @@
                     <div class="form-group">
 
                         <label>Fecha Inicio</label>
-
-                        <input
-                            type="date"
-                            name="fecha_inicio"
-                            value="{{ contrato.fecha_inicio.strftime('%Y-%m-%d') }}"
-                            required>
+                        <input type="date" name="fecha_inicio" value="{{ contrato.fecha_inicio.strftime('%Y-%m-%d') }}" required>
 
                     </div>
 
@@ -101,12 +85,7 @@
                     <div class="form-group">
 
                         <label>Fecha Fin</label>
-
-                        <input
-                            type="date"
-                            name="fecha_fin"
-                            value="{{ contrato.fecha_fin.strftime('%Y-%m-%d') }}"
-                            required>
+                        <input type="date" name="fecha_fin" value="{{ contrato.fecha_fin.strftime('%Y-%m-%d') }}" required>
 
                     </div>
 
@@ -115,12 +94,7 @@
                     <div class="form-group">
 
                         <label>Monto</label>
-
-                        <input
-                            type="text"
-                            name="monto"
-                            value="{{ contrato.monto }}"
-                            required>
+                        <input type="text" name="monto" value="{{ contrato.monto if contrato.monto is not none else '' }}">
 
                     </div>
 
@@ -129,13 +103,7 @@
                     <div class="form-group">
 
                         <label>Forma de Pago</label>
-
-                        <input
-                            type="text"
-                            class="mayusculas"
-                            name="forma_pago"
-                            value="{{ contrato.forma_pago }}"
-                            required>
+                        <input type="text" class="mayusculas" name="forma_pago" value="{{ contrato.forma_pago }}" required>
 
                     </div>
 
@@ -144,11 +112,7 @@
                     <div class="form-group">
 
                         <label>Empresa Prestadora</label>
-
-                        <input
-                            type="text"
-                            value="{{ contrato.nom_empresa }}"
-                            readonly>
+                        <input type="text" value="{{ contrato.nom_empresa }}" readonly>
 
                     </div>
 
@@ -157,26 +121,18 @@
                     <div class="form-group">
 
                         <label>Vigencia</label>
-
-                        <input
-                            type="text"
-                            value="{{ contrato.vigencia }}"
-                            readonly>
+                        <input type="text" value="{{ contrato.vigencia }}" readonly>
 
                     </div>
 
                     <div class="form-group full-width">
                         <label>Trabajadores asignados</label>
 
-                        <select
-                            name="trabajadores"
-                            multiple
-                            size="10">
+                        <select name="trabajadores" multiple size="10">
                             {% for trabajador in trabajadores %}
 
                                 <option
                                     value="{{ trabajador.id }}"
-
                                     {% if trabajador in contrato.trabajadores %}
                                         selected
                                     {% endif %}
@@ -198,20 +154,12 @@
 
                 <div class="form-actions">
 
-                    <a
-                        href="{{ url_for('contratos') }}"
-                        class="btn-secondary">
-
+                    <a href="{{ url_for('contratos') }}" class="btn-secondary">
                         Volver
-
                     </a>
 
-                    <button
-                        type="submit"
-                        class="btn-primary">
-
+                    <button type="submit" class="btn-primary">
                         Guardar Cambios
-
                     </button>
 
                 </div>
@@ -222,6 +170,4 @@
 
     </div>
 
-</body>
-
-</html>
+{% endblock %}

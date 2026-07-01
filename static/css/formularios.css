@@ -398,3 +398,11 @@ input[readonly]{
     background:#b91c1c;
 
 }
+
+.form-group select{
+
+    width: 100%;
+    min-height: 45px;
+    font-size: 15px;
+
+}

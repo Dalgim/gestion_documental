@@ -1,125 +1,120 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Nuevo Proyecto</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-    </head>
-    <body>
-        <br><br>
-        <div class="form-container">
+{% extends 'base.html' %}
 
-            <div class="form-title">
+{% block content %}
 
-                <h1>Servicio Especializado</h1>
-                <p>  Edicion de servicios </p>
+    <div class="form-container">
 
-            </div>
+        <div class="form-title">
 
-            <div class="form-card">
-                <form method="POST">
-                    <div class="form-grid">
-
-                        <div class="section-title full-width">
-                            Datos del servicio
-                        </div>
-
-                        <!-- NOMBRE SERVICIO -->
-                        <div class="form-group">
-
-                            <label>Nombre Servicio</label>
-                            <input type="text" name="nombre_proyecto" value="{{ proyecto.nombre_proyecto }}" required>
-
-                        </div>
-
-                        <!-- FOLIO REPSE -->
-                        <div class="form-group">
-
-                            <label>Folio REPSE</label>
-                            <input type="text" name="folio_repse" value="{{ proyecto.folio_repse }}" required>
-
-                        </div>
-
-                        <!-- ACTIVIDAD REPSE -->
-                        <div class="form-group">
-
-                            <label>Folio Actividad REPSE</label>
-                            <input type="text" name="act_repse" value="{{ proyecto.act_repse }}">
-
-                        </div>
-
-                        <div class="section-title full-width">
-                            Datos de la empresa
-                        </div>
-
-                        <!-- EMPRESA -->
-                        <div class="form-group">
-
-                            <label>Empresa prestadora del servicio</label>
-
-                            <select name="empresa_id" required>
-
-                                <option value="">Seleccione una empresa</option>
-
-                                {% for e in empresas %}
-
-                                    <option value="{{ e.id }}"
-                                        {% if proyecto.empresa_id == e.id %}
-                                            selected
-                                        {% endif %}
-                                    >
-
-                                        {{ e.nombre }}
-
-                                    </option>
-
-                                {% endfor %}
-
-                            </select>
-
-                        </div>
-
-                        <!-- TIPO SERVICIO -->
-                        <div class="form-group">
-
-                            <label>Tipo Servicio</label>
-
-                            <select name="tipo_servicio">
-
-                                <option value="REPSE">
-                                    REPSE
-                                </option>
-
-                                <option value="CONSULTORIA">
-                                    CONSULTORIA
-                                </option>
-
-                                <option value="MATERIALIDAD">
-                                    MATERIALIDAD
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <a href="{{ url_for('proyectos') }}" class="btn-secondary">
-                            Volver
-                        </a>
-
-                        <button type="submit" class="btn-primary">
-                            Guardar Servicio
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
+            <h1>Servicio Especializado</h1>
+            <p>  Edicion de servicios </p>
 
         </div>
 
-    </body>
-</html>
+        <div class="form-card">
+            <form method="POST">
+                <div class="form-grid">
+
+                    <div class="section-title full-width">
+                        Datos del servicio
+                    </div>
+
+                    <!-- NOMBRE SERVICIO -->
+                    <div class="form-group">
+
+                        <label>Nombre Servicio</label>
+                        <input type="text" name="nombre_proyecto" value="{{ proyecto.nombre_proyecto }}" required>
+
+                    </div>
+
+                    <!-- FOLIO REPSE -->
+                    <div class="form-group">
+
+                        <label>Folio REPSE</label>
+                        <input type="text" name="folio_repse" value="{{ proyecto.folio_repse }}" required>
+
+                    </div>
+
+                    <!-- ACTIVIDAD REPSE -->
+                    <div class="form-group">
+
+                        <label>Folio Actividad REPSE</label>
+                        <input type="text" name="act_repse" value="{{ proyecto.act_repse }}">
+
+                    </div>
+
+                    <div class="section-title full-width">
+                        Datos de la empresa
+                    </div>
+
+                    <!-- EMPRESA -->
+                    <div class="form-group">
+
+                        <label>Empresa prestadora del servicio</label>
+
+                        <select name="empresa_id" required>
+
+                            <option value="">Seleccione una empresa</option>
+
+                            {% for e in empresas %}
+
+                                <option value="{{ e.id }}"
+                                    {% if proyecto.empresa_id == e.id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ e.nombre }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- TIPO SERVICIO -->
+                    <div class="form-group">
+
+                        <label>Tipo Servicio</label>
+
+                        <select name="tipo_servicio">
+
+                            <option value="REPSE">
+                                REPSE
+                            </option>
+
+                            <option value="CONSULTORIA">
+                                CONSULTORIA
+                            </option>
+
+                            <option value="MATERIALIDAD">
+                                MATERIALIDAD
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="{{ url_for('proyectos') }}" class="btn-secondary">
+                        Volver
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Guardar Servicio
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}

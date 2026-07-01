@@ -12,7 +12,7 @@ with app.app_context():
         contraseña=generate_password_hash(
             'Admin123'
         ),
-        tipo_usuario = 'ADMINISTRADOR' 
+        rol = 'ADMINISTRADOR' 
 
     )
 

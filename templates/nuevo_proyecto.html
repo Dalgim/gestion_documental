@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Nuevo Proyecto</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-    </head>
-    <body>
-        <br><br>
+{% extends 'base.html' %}
+
+{% block content %}
+
         <div class="form-container">
 
             <div class="form-title">
@@ -114,5 +110,4 @@
 
         </div>
 
-    </body>
-</html>
+{% endblock %}

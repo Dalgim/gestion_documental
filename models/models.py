@@ -32,7 +32,7 @@ class Users(UserMixin, db.Model):
 
     contraseña = db.Column(db.String(200))
 
-    tipo_usuario = db.Column(db.String(200), default="LEGAL")
+    rol = db.Column(db.String(30),nullable=False,default="USUARIO")
 
     activo = db.Column(db.Boolean, default=True)
 
@@ -218,7 +218,7 @@ class Contrato(db.Model):
         nullable=False
     )'''
 
-    monto = db.Column(db.Float)
+    monto = db.Column(db.Float, nullable=True)
 
     forma_pago = db.Column(
         db.Text

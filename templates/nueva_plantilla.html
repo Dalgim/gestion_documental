@@ -1,45 +1,55 @@
-<html>
-    <head>  
-        <title> Contratos </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    </head>
-    <body>
-        <h2>Guarda nueva plantilla de contrato</h2>
+{% extends 'base.html' %}
 
-        <form method="POST">
+{% block content %}
+    
+    <div class="form-container">
 
-            <label>Nombre Plantilla</label>
-            <input
-                type="text"
-                name="nombre"
-                required
-            >
+        <div class="form-title">
+            <h2>Guarda nueva plantilla de contrato</h2>
+            <p> Capture la información necesaria para guardar los datos de plantilla.</p>
+        </div>
 
-            <label>Empresa Prestadora</label>
-            <input
-                type="text"
-                name="empresa_prestadora"
-                required
-            >
+        <div class="form-card">
 
-            <label>Archivo Word</label>
-            <input
-                type="text"
-                name="archivo"
-                required
-            >
+            <div class="form-grid">
 
-            <label>Descripción</label>
-            <textarea
-                name="descripcion"
-            ></textarea>
+                <form method="POST">
 
-            <button type="submit">
+                    <div class="form-group">
+                        <label>Nombre Plantilla</label>
+                        <input type="text" name="nombre" required>
+                    </div>
 
-                Guardar
+                    <div class="form-group">
+                        <label>Empresa Prestadora</label>
+                        <input type="text" name="empresa_prestadora" required>
+                    </div>
 
-            </button>
+                    <div class="form-group">
+                        <label>Archivo Word</label>
+                        <input type="text" name="archivo" required>
+                    </div>
 
-        </form>
-    </body>
-</html>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea name="descripcion"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('listar_plantillas') }}"  class="btn-secondary">
+                            Volver
+                        </a>
+
+                        <button type="submit" class="btn-primary">
+                            Guardar
+                        </button>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

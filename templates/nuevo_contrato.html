@@ -1,166 +1,264 @@
-<html>
-    <head>  
-        <title> Contratos </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-    </head>
-    <body>
-        <div class="form-container">
+{% extends 'base.html' %}
 
-            <div class="form-title">
+{% block content %}
+    <div class="form-container">
 
-                <h1>Generación de Contratos</h1>
-                <p> Capture la información necesaria para generar el contrato y sus anexos.</p>
+        <div class="form-title">
 
-            </div>
-
-            <div class="form-card">
-                <form method="POST" action="{{ url_for('generar_contrato_web') }}">
-
-                    <div class="form-grid">
-
-                        <div class="section-title full-width">
-                            Generación de contratos
-                        </div>
-
-                        <!-- CLIENTE -->
-
-                        <div class="form-group">
-                            <label>Cliente</label>
-
-                            <select name="cliente_id"  required>
-
-                                <option value="">
-                                    Seleccione...
-                                </option>
-
-                                {% for cliente in clientes %}
-
-                                <option value="{{ cliente.id }}">
-                                    {{ cliente.nombre_cliente }}
-
-                                </option>
-
-                                {% endfor %}
-
-                            </select>
-
-                        </div>
-
-                        <!-- PROYECTO -->
-
-                        <div class="form-group">
-
-                            <label>Servicio Especializado</label>
-                            <select  name="proyecto_id"  id="proyecto_id" required>
-
-                                <option value="">
-                                    Seleccione...
-                                </option>
-
-                                {% for proyecto in proyectos %}
-
-                                <option value="{{ proyecto.id }}">
-                                    {{ proyecto.nombre_proyecto }}
-                                </option>
-
-                                {% endfor %}
-
-                            </select>
-
-                        </div>
-
-                        <!-- FECHA INICIO -->
-
-                        <div class="form-group">
-
-                            <label>Fecha de Inicio</label>
-                            <input type="date" name="fecha_inicio" required>
-
-                        </div>
-
-                        <!-- FECHA FIN -->
-
-                        <div class="form-group">
-
-                            <label>Fecha de Fin</label>
-                            <input type="date" name="fecha_fin" required>
-
-                        </div>
-
-                        <!-- MONTO -->
-
-                        <div class="form-group">
-
-                            <label>Monto</label>
-                            <input type="text" name="monto" class="mayusculas" placeholder="$0.00">
-
-                        </div>
-
-                        <!-- FORMA DE PAGO -->
-
-                        <div class="form-group">
-
-                            <label>Forma de Pago</label>
-                            <input type="text" name="forma_pago" class="mayusculas" placeholder="TRANSFERENCIA">
-
-                        </div>
-
-                        <!-- LUGAR FIRMA -->
-
-                        <div class="form-group full-width">
-
-                            <label>Lugar de Firma</label>
-                            <input type="text" name="lugar_firma" class="mayusculas" placeholder="PUEBLA, PUEBLA" required>
-
-                        </div>
-
-                        <div class="section-title full-width">
-
-                            Trabajadores Asignados
-
-                        </div>
-
-                        <!-- TRABAJADORES -->
-
-                        <div class="form-group full-width">
-
-                            <label>
-                                Seleccione los trabajadores asignados al contrato
-                            </label>
-
-                            <select name="trabajadores" id="trabajadores" multiple required>
-                            </select>
-
-                            <small style="margin-top:10px; color:#64748b;">
-                                Mantenga presionada la tecla CTRL para seleccionar varios trabajadores.
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <a href="{{ url_for('contratos') }}"  class="btn-secondary">
-                            Volver
-                        </a>
-
-                        <button type="submit" class="btn-primary">
-                            Generar Documento
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
+            <h1>Generación de Contratos</h1>
+            <p> Capture la información necesaria para generar el contrato y sus anexos.</p>
 
         </div>
 
-        <script>
+        <div class="form-card">
+            <form method="POST" action="{{ url_for('generar_contrato_web') }}">
 
-        document
-        .querySelectorAll(
+                <div class="form-grid">
+
+                    <div class="section-title full-width">
+                        Generación de contratos
+                    </div>
+
+                    <!-- CLIENTE -->
+
+                    <div class="form-group">
+                        <label>Cliente</label>
+
+                        <select name="cliente_id"  required>
+
+                            <option value="">
+                                Seleccione...
+                            </option>
+
+                            {% for cliente in clientes %}
+
+                            <option value="{{ cliente.id }}">
+                                {{ cliente.nombre_cliente }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+                    
+                    <!-- EMPRESA -->
+
+                    <div class="form-group">
+
+                        <label>Empresa</label>
+
+                        <select id="empresa" name="empresa_id">
+                            <option value="">
+                                Seleccione...
+                            </option>
+
+                            {% for empresa in empresas %}
+                                <option value="{{ empresa.id }}">
+                                    {{ empresa.nombre }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+
+                    <!-- PROYECTO -->
+
+                    <div class="form-group">
+
+                        <label>Servicio Especializado</label>
+                        <select id="proyecto" name="proyecto_id">
+                            <option value="">
+                                Seleccione un servicio
+                            </option>
+                        </select>
+
+                    </div>
+
+                    <!-- FECHA INICIO -->
+
+                    <div class="form-group">
+
+                        <label>Fecha de Inicio</label>
+                        <input type="date" name="fecha_inicio" required>
+
+                    </div>
+
+                    <!-- FECHA FIN -->
+
+                    <div class="form-group">
+
+                        <label>Fecha de Fin</label>
+                        <input type="date" name="fecha_fin" required>
+
+                    </div>
+
+                    <!-- MONTO -->
+
+                    <div class="form-group">
+
+                        <label>Monto</label>
+                        <input type="text" name="monto" class="mayusculas" placeholder="Opcional: ej. 25000">
+
+                    </div>
+
+                    <!-- FORMA DE PAGO -->
+
+                    <div class="form-group">
+
+                        <label>Forma de Pago</label>
+                        <input type="text" name="forma_pago" class="mayusculas" placeholder="TRANSFERENCIA">
+
+                    </div>
+
+                    <!-- LUGAR FIRMA -->
+
+                    <div class="form-group full-width">
+
+                        <label>Lugar de Firma</label>
+                        <input type="text" name="lugar_firma" class="mayusculas" placeholder="PUEBLA, PUEBLA" required>
+
+                    </div>
+
+                    <div class="section-title full-width">
+
+                        Trabajadores Asignados
+
+                    </div>
+
+                    <!-- TRABAJADORES -->
+
+                    <div class="form-group full-width">
+
+                        <label>
+                            Seleccione los trabajadores asignados al contrato
+                        </label>
+
+                        <select name="trabajadores" id="trabajadores" multiple required>
+                        </select>
+
+                        <small style="margin-top:10px; color:#64748b;">
+                            Mantenga presionada la tecla CTRL para seleccionar varios trabajadores.
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="{{ url_for('contratos') }}"  class="btn-secondary">
+                        Volver
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Generar Documento
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const empresa = document.getElementById("empresa");
+
+            empresa.addEventListener("change", function () {
+
+                let empresaId = this.value;
+
+                if (!empresaId) {
+                    limpiarServicios();
+                    limpiarTrabajadores();
+                    return;
+                }
+
+                cargarServicios(empresaId);
+                cargarTrabajadores(empresaId);
+
+            });
+
+        });
+
+
+        function cargarServicios(empresaId) {
+
+            fetch("/empresa/" + empresaId + "/proyectos")
+
+                .then(response => response.json())
+
+                .then(datos => {
+
+                    const proyecto = document.getElementById("proyecto");
+
+                    proyecto.innerHTML =
+                        '<option value="">Seleccione un servicio</option>';
+
+                    datos.forEach(function (item) {
+
+                        proyecto.innerHTML +=
+                            `<option value="${item.id}">
+                                ${item.nombre}
+                            </option>`;
+
+                    });
+
+                });
+
+        }
+
+
+        function cargarTrabajadores(empresaId) {
+
+            fetch("/empresa/" + empresaId + "/trabajadores")
+            .then(response => response.json())
+            .then(datos => {
+                const select =
+                    document.getElementById("trabajadores");
+
+                select.innerHTML = "";
+
+                if(datos.length === 0){
+                    let option = document.createElement("option");
+                    option.text = "No existen trabajadores";
+                    option.disabled = true;
+                    select.appendChild(option);
+                    return;
+                }
+
+                datos.forEach(function(trabajador){
+                    let option =document.createElement("option");
+                    option.value =trabajador.id;
+                    option.text =trabajador.nombre;
+                    select.appendChild(option);
+                });
+
+            });
+
+        }
+
+
+        function limpiarServicios() {
+            document.getElementById("proyecto").innerHTML =
+                '<option value="">Seleccione un servicio</option>';
+        }
+
+
+        function limpiarTrabajadores() {
+            document.getElementById(
+                "trabajadores"
+            ).innerHTML = "";
+        }
+
+
+        document.querySelectorAll(
             '.mayusculas'
         )
         .forEach(campo => {
@@ -168,7 +266,6 @@
             campo.addEventListener(
                 'input',
                 function(){
-
                     this.value =
                         this.value.toUpperCase();
 
@@ -177,74 +274,6 @@
 
         });
 
-        document
-        .getElementById(
-            'proyecto_id'
-        )
-        .addEventListener(
-            'change',
-            function(){
+    </script>
 
-                let proyectoId =
-                    this.value;
-
-                let selectTrabajadores =
-                    document.getElementById(
-                        'trabajadores'
-                    );
-
-                selectTrabajadores.innerHTML =
-                    '';
-
-                if(
-                    !proyectoId
-                ){
-                    return;
-                }
-
-                fetch(
-                    `/proyectos/${proyectoId}/trabajadores`
-                )
-
-                .then(
-                    response =>
-                        response.json()
-                )
-
-                .then(
-                    data => {
-
-                        data.forEach(
-                            trabajador => {
-
-                                let option =
-                                    document.createElement(
-                                        'option'
-                                    );
-
-                                option.value =
-                                    trabajador.id;
-
-                                option.textContent =
-                                    trabajador.nombre;
-
-                                selectTrabajadores
-                                    .appendChild(
-                                        option
-                                    );
-
-                            }
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-        </script>
-
-    </body>
-
-   
-</html>
+{% endblock %}

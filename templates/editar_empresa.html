@@ -1,145 +1,138 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Nuevo Cliente</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/formularios.css') }}">
-    </head>
-    <body>
+{% extends 'base.html' %}
 
-        <div class="form-container">
+{% block content %}
 
-            <div class="form-title">
+    <div class="form-container">
 
-                <h2>Editar empresa prestadora</h2>
-                <p>Edita el registro de la empresa</p>
+        <div class="form-title">
 
-            </div>
-
-            <div class="form-card">
-                <form method="POST">
-
-                    <div class="form-grid">
-
-                        <div class="section-title full-width">
-
-                            Información General
-
-                        </div>
-
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <input type="text" name="nombre" value="{{ empresa.nombre }}" class="mayusculas" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>RFC</label>
-                            <input type="text" name="rfc" value="{{ empresa.rfc }}" class="mayusculas" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Representante</label>
-                            <input type="text" name="representante" value="{{ empresa.representante }}" class="mayusculas" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Domicilio</label>
-                            <input type="text" name="domicilio" value="{{ empresa.domicilio }}" class="mayusculas" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Correo</label>
-                            <input type="email" name="correo" value="{{ empresa.correo }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Teléfono</label>
-                            <input type="text" name="telefono" value="{{ empresa.telefono }}">
-                        </div>
-
-                        <!-- EMPRESA -->
-                        <div class="form-group">
-
-                            <label>Nivel</label>
-
-                            <select name="nivel">
-
-                                <option value="1"
-                                    {% if empresa.nivel == 1 %}
-                                        selected
-                                    {% endif %}
-                                >
-                                    Nivel 1
-                                </option>
-
-                                <option value="2"
-                                    {% if empresa.nivel == 2 %}
-                                        selected
-                                    {% endif %}
-                                >
-                                    Nivel 2
-                                </option>
-
-                                <option value="3"
-                                    {% if empresa.nivel == 3 %}
-                                        selected
-                                    {% endif %}
-                                >
-                                    Nivel 3
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>Estado de la empresa</label>
-
-                            <select name="activo" required>
-
-                                <option value="1"
-                                    {% if empresa.activo %}
-                                        selected
-                                    {% endif %}
-                                >
-                                    Activa
-                                </option>
-
-                                <option value="0"
-                                    {% if not empresa.activo %}
-                                        selected
-                                    {% endif %}
-                                >
-                                    Inactiva
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Regimen Fiscal</label>
-                            <input type="text" name="telefono" value="{{ empresa.regimen_fiscal }}">
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <a href="{{ url_for('empresas') }}" class="btn-secondary">
-                            Volver
-                        </a>
-
-                        <button type="submit" class="btn-primary">
-                            Guardar Empresa
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
+            <h2>Editar empresa prestadora</h2>
+            <p>Edita el registro de la empresa</p>
 
         </div>
 
-    </body>
+        <div class="form-card">
+            <form method="POST">
 
-</html>
+                <div class="form-grid">
+
+                    <div class="section-title full-width">
+
+                        Información General
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" value="{{ empresa.nombre }}" class="mayusculas" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>RFC</label>
+                        <input type="text" name="rfc" value="{{ empresa.rfc }}" class="mayusculas" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Representante</label>
+                        <input type="text" name="representante" value="{{ empresa.representante }}" class="mayusculas" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Domicilio</label>
+                        <input type="text" name="domicilio" value="{{ empresa.domicilio }}" class="mayusculas" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" name="correo" value="{{ empresa.correo }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono" value="{{ empresa.telefono }}">
+                    </div>
+
+                    <!-- EMPRESA -->
+                    <div class="form-group">
+
+                        <label>Nivel</label>
+
+                        <select name="nivel">
+
+                            <option value="1"
+                                {% if empresa.nivel == 1 %}
+                                    selected
+                                {% endif %}
+                            >
+                                Nivel 1
+                            </option>
+
+                            <option value="2"
+                                {% if empresa.nivel == 2 %}
+                                    selected
+                                {% endif %}
+                            >
+                                Nivel 2
+                            </option>
+
+                            <option value="3"
+                                {% if empresa.nivel == 3 %}
+                                    selected
+                                {% endif %}
+                            >
+                                Nivel 3
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Estado de la empresa</label>
+
+                        <select name="activo" required>
+
+                            <option value="1"
+                                {% if empresa.activo %}
+                                    selected
+                                {% endif %}
+                            >
+                                Activa
+                            </option>
+
+                            <option value="0"
+                                {% if not empresa.activo %}
+                                    selected
+                                {% endif %}
+                            >
+                                Inactiva
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Regimen Fiscal</label>
+                        <input type="text" name="telefono" value="{{ empresa.regimen_fiscal }}">
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="{{ url_for('empresas') }}" class="btn-secondary">
+                        Volver
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        Guardar Empresa
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+{% endblock %}

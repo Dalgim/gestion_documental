@@ -7,6 +7,7 @@ from models.models import db, Cliente, Proyecto, Contrato, Trabajador, Users, Pl
 from services.importar_empresas import leer_excel, procesar_importacion_empresas
 from services.importar_trabajadores import leer_excel, procesar_importacion_trabajadores
 from werkzeug.security import check_password_hash
+from utils.decorators import roles_requeridos
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from datetime import datetime
@@ -48,10 +49,7 @@ def load_user(id):
     )
 
 # Definimos una ruta para login 
-@app.route(
-    '/login',
-    methods=['GET', 'POST']
-)
+@app.route('/login',methods=['GET', 'POST'])
 def login():
 
     if request.method == 'POST':
@@ -214,7 +212,6 @@ def nuevo_proyecto():
         empresas = empresas
     )
 
-
 # Definimos la ruta para el alta de trabajadores
 # establecemos la pagina para el alta
 @app.route('/trabajadores')
@@ -230,7 +227,6 @@ def trabajadores():
         trabajadores = trabajadores,
         proyectos = proyectos,
     )
-
 
 # Ruta para la generacion de trabajadores 
 @app.route('/trabajadores/nuevo', methods=['GET', 'POST'])
@@ -266,10 +262,10 @@ def nuevo_trabajador():
         empresas = empresas
     )
 
-
 # Ruta para visualizar los contratos generados
 @app.route('/contratos')
 @login_required
+@roles_requeridos("ADMINISTRADOR","LEGAL")
 def contratos():
 
     clientes = Cliente.query.order_by(
@@ -298,10 +294,10 @@ def contratos():
         contratos=contratos
     )
 
-
 # Vista para el formulario de nuevo contrato
 @app.route('/contratos/nuevo')
 @login_required
+@roles_requeridos("ADMINISTRADOR","LEGAL")
 def nuevo_contrato():
 
     clientes = Cliente.query.order_by(
@@ -316,18 +312,27 @@ def nuevo_contrato():
         Trabajador.nombre_trabajador
     ).all()
 
+    empresas = Empresa.query.order_by(
+        Empresa.nombre
+    ).all()
+
     return render_template(
         'nuevo_contrato.html',
         clientes=clientes,
         proyectos=proyectos,
-        trabajadores=trabajadores
+        trabajadores=trabajadores,
+        empresas=empresas
         #empresas_prestadoras=empresas_prestadoras
     )
 
 # Aqui se genera el contrato de forma habitual
 @app.route('/contratos/generar', methods=['GET','POST'])
 @login_required
+@roles_requeridos("ADMINISTRADOR","LEGAL")
 def generar_contrato_web():
+
+    def safe_upper(value):
+        return value.upper() if value else ""
 
     if request.method == 'POST':
 
@@ -371,26 +376,49 @@ def generar_contrato_web():
 
             trabajadores.append({
 
-                "nombre": t.nombre_trabajador.upper(),
+                "nombre": safe_upper(t.nombre_trabajador),
                 "nss": t.nss,
-                "curp": t.curp.upper(),
+                "curp": safe_upper(t.curp),
                 "salario": t.salario_base,
-                "actividades": t.actividades.upper(),
-                "puesto": t.puesto.upper()
+                "actividades": safe_upper(t.actividades),
+                "puesto": safe_upper(t.puesto)
 
             })
 
+        # Obtener monto (opcional)
+        monto_texto = request.form.get(
+            "monto",
+            ""
+        ).strip()
+
+        monto_raw = request.form.get("monto", "").strip()
+        if monto_raw == "":
+            monto = None
+        else:
+            try:
+                monto = float(
+                    monto_raw
+                    .replace("$", "")
+                    .replace(",", "")
+                )
+            except ValueError:
+                flash(
+                    "El monto debe ser un número válido.",
+                    "danger"
+                )
+                return redirect(request.url)
+
         contexto = {
 
-            "NOMENCLATURA": cliente.nomenclatura.upper(),
-            "CLIENTE": cliente.nombre_cliente.upper(),
-            "RFC": cliente.rfc.upper(),
-            "DOM_FISCAL": cliente.dom_fiscal.upper(),
-            "REPRESENTANTE": cliente.representante.upper(),
-            "PROYECTO": proyecto.nombre_proyecto.upper(),
-            "TIPO_SERVICIO": proyecto.tipo_servicio.upper(),
-            "EMPRESA_SERVICIO": proyecto.empresa.nombre.upper(),
-            "MONTO": request.form['monto'],
+            "NOMENCLATURA": safe_upper(cliente.nomenclatura),
+            "CLIENTE": safe_upper(cliente.nombre_cliente),
+            "RFC": safe_upper(cliente.rfc),
+            "DOM_FISCAL": safe_upper(cliente.dom_fiscal),
+            "REPRESENTANTE": safe_upper(cliente.representante),
+            "PROYECTO": safe_upper(proyecto.nombre_proyecto),
+            "TIPO_SERVICIO": safe_upper(proyecto.tipo_servicio),
+            "EMPRESA_SERVICIO": safe_upper(proyecto.empresa.nombre),
+            "MONTO": f"${monto:,.2f}" if monto is not None else "NO APLICA",
             "VIGENCIA": f"{meses} MESES",
             "INICIO":
                 #fecha_inicio.strftime("%d/%m/%Y"),
@@ -411,16 +439,10 @@ def generar_contrato_web():
             proyecto_id = proyecto.id,
             nom_empresa = proyecto.empresa.nombre,
             nom_cliente = cliente.nombre_cliente,
-            monto = request.form['monto'],
+            monto = monto,
             forma_pago = request.form['forma_pago'],
-            fecha_inicio = datetime.strptime(
-                request.form['fecha_inicio'],
-                '%Y-%m-%d'
-            ).date(),
-            fecha_fin = datetime.strptime(
-                request.form['fecha_fin'],
-                '%Y-%m-%d'
-            ).date(),
+            fecha_inicio = fecha_inicio,
+            fecha_fin = fecha_fin,
             vigencia = f"{meses} Meses",
             lugar_firma = request.form['lugar_firma']
         )
@@ -470,7 +492,6 @@ def trabajadores_por_proyecto(id):
         for t in trabajadores
     ])
 
-
 # Ruta para obtener las plantillas de contrato por empresa
 @app.route('/api/plantillas')
 @login_required
@@ -510,7 +531,6 @@ def listar_plantillas():
         'plantillas.html',
         plantillas=plantillas
     )
-
 
 # Ruta para guardar las plantillas de contrato por empresa
 @app.route('/plantillas/nueva',methods=['GET', 'POST'])
@@ -604,7 +624,6 @@ def nueva_empresa():
     return render_template(
         'nueva_empresa.html'
     )
-
 
 # Agregamos ruta para poder generar la importación de un excel a base de datos de empresas
 @app.route("/empresas/importar",methods=["GET", "POST"])
@@ -948,7 +967,7 @@ def editar_cliente(id):
 
         return redirect(
             url_for(
-                'listar_clientes'
+                'clientes'
             )
         )
 
@@ -1163,7 +1182,11 @@ def eliminar_empresa(id):
 # ==========================================
 @app.route('/contratos/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
+@roles_requeridos("ADMINISTRADOR","LEGAL")
 def editar_contrato(id):
+
+    def safe_upper(value):
+        return value.upper() if value else ""
 
     contrato = Contrato.query.get_or_404(id)
 
@@ -1191,7 +1214,17 @@ def editar_contrato(id):
 
         contrato.proyecto_id = request.form['proyecto_id']
 
-        contrato.monto = request.form['monto']
+        monto_raw = request.form.get("monto", "").strip()
+        if monto_raw == "" or monto_raw.lower() == "none":
+            contrato.monto = None
+        else:
+            try:
+                contrato.monto = float(
+                    monto_raw.replace(",", "").replace("$", "")
+                )
+            except ValueError:
+                flash("El monto debe ser un número válido.", "danger")
+                return redirect(request.url)
 
         contrato.forma_pago = request.form['forma_pago']
 
@@ -1254,26 +1287,26 @@ def editar_contrato(id):
         for t in contrato.trabajadores:
 
             trabajadores.append({
-                "nombre": t.nombre_trabajador.upper(),
+                "nombre": safe_upper(t.nombre_trabajador),
                 "nss": t.nss,
-                "curp": t.curp.upper(),
+                "curp": safe_upper(t.curp),
                 "salario": t.salario_base,
-                "actividades": t.actividades.upper(),
-                "puesto": t.puesto.upper()
+                "actividades": safe_upper(t.actividades),
+                "puesto": safe_upper(t.puesto)
             })
         
         contexto = {
 
-            "NOMENCLATURA": cliente.nomenclatura.upper(),
-            "CLIENTE": cliente.nombre_cliente.upper(),
-            "RFC": cliente.rfc.upper(),
-            "DOM_FISCAL": cliente.dom_fiscal.upper(),
-            "REPRESENTANTE": cliente.representante.upper(),
-            "PROYECTO": proyecto.nombre_proyecto.upper(),
-            "TIPO_SERVICIO": proyecto.tipo_servicio.upper(),
-            "EMPRESA_SERVICIO": proyecto.empresa.nombre.upper(),
-            "MONTO": contrato.monto,
-            "VIGENCIA": contrato.vigencia.upper(),
+            "NOMENCLATURA": safe_upper(cliente.nomenclatura),
+            "CLIENTE": safe_upper(cliente.nombre_cliente),
+            "RFC": safe_upper(cliente.rfc),
+            "DOM_FISCAL": safe_upper(cliente.dom_fiscal),
+            "REPRESENTANTE": safe_upper(cliente.representante),
+            "PROYECTO": safe_upper(proyecto.nombre_proyecto),
+            "TIPO_SERVICIO": safe_upper(proyecto.tipo_servicio),
+            "EMPRESA_SERVICIO": safe_upper(proyecto.empresa.nombre),
+            "MONTO": contrato.monto if contrato.monto is not None else "NO APLICA",
+            "VIGENCIA": safe_upper(contrato.vigencia),
             "INICIO": fecha_letra(
                 contrato.fecha_inicio
             ),
@@ -1281,7 +1314,7 @@ def editar_contrato(id):
                 contrato.fecha_fin
             ),
             "FORMA_PAGO": contrato.forma_pago,
-            "LUGAR_FIRMA": contrato.lugar_firma.upper(),
+            "LUGAR_FIRMA": safe_upper(contrato.lugar_firma),
             "trabajadores": trabajadores
         }
 
@@ -1316,6 +1349,7 @@ def editar_contrato(id):
 # ==========================================
 @app.route( '/contratos/eliminar/<int:id>', methods=['POST'])
 @login_required
+@roles_requeridos("ADMINISTRADOR","LEGAL")
 def eliminar_contrato(id):
 
     contrato = Contrato.query.get_or_404(id)
@@ -1343,6 +1377,48 @@ def eliminar_contrato(id):
     return redirect(
         url_for('contratos')
     )
+
+
+# Ruta AJAX para validacion de servicios por empresa en la generación de contratos
+@app.route("/empresa/<int:id>/proyectos")
+@login_required
+def proyectos_empresa(id):
+
+    proyectos = Proyecto.query.filter_by(
+        empresa_id=id
+    ).order_by(
+        Proyecto.nombre_proyecto
+    ).all()
+
+    return jsonify([
+        {
+            "id": p.id,
+            "nombre": p.nombre_proyecto
+        }
+        for p in proyectos
+    ])
+
+
+# Ruta para asociar los trabajadores a la empresa que presta el servicio
+@app.route("/empresa/<int:id>/trabajadores")
+@login_required
+def trabajadores_empresa(id):
+
+    trabajadores = Trabajador.query.filter_by(
+        empresa_id=id,
+        activo=True
+    ).order_by(
+        Trabajador.nombre_trabajador
+    ).all()
+
+    return jsonify([
+        {
+            "id": t.id,
+            "nombre": t.nombre_trabajador
+        }
+        for t in trabajadores
+    ])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
